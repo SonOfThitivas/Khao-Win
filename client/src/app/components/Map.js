@@ -35,6 +35,8 @@ function Map() {
                 zoom={16}
                 scrollWheelZoom={true}
                 maxBounds={bounds}
+                zoomControl={false}
+                doubleClickZoom={false}
                 className="h-screen"
             >
                 <TileLayer

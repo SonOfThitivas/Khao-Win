@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import './page.css';
+import { useRouter } from 'next/router';
 
 function Page() {
   return (

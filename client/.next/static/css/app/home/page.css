@@ -2,120 +2,206 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/app/home/home.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************/
 html, body {
-    height: 100%;
-    background-color: #e8e8e8;
-    margin: 0; 
-  }
-  
-  .homepage {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  footer {
-    flex-shrink: 0;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    border-top: none;
-    position: absolute;
-    z-index: 11;
-    bottom: 10px;
-    right: 0px;
-    left: 0px;
-  }
-  
-  header {
-    flex-shrink: 0;
-    position: absolute;
-    z-index: 10;
-    right: 0;
-    left: 0;
-  }
-  
-  /* home.css */
-  #navbody {
-    width: 300px;
-    height: 60px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 40px;
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.041);
-    align-items: center;
-    justify-content: center;
-    display: flex;
+  height: 100%;
+  background-color: #e8e8e8;
+  margin: 0; 
+}
+
+.homepage {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  flex-shrink: 0;
+  width: 100%; /* ให้ footer กว้างเท่ากับหน้าจอ */
+  display: flex;
+  justify-content: center; /* จัดตำแหน่งตรงกลางในแนวนอน */
+  align-items: center; /* จัดตำแหน่งตรงกลางในแนวตั้ง */
+  border-top: none;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  z-index: 11;
+}
+
+header {
+  flex-shrink: 0;
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  left: 0;
+}
+
+/* home.css */
+#navbody {
+  width: 300px;
+  height: 60px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 40px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.041);
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
 .ul {
-    list-style: none;
-    width: 100%;
-    background-color: transparent;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    padding: 0; /* เพิ่ม padding หากต้องการให้มีระยะห่าง */
+  list-style: none;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 0; /* เพิ่ม padding หากต้องการให้มีระยะห่าง */
 }
 
 .li {
-    display: inline-block;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .radio {
-    display: none;
+  display: none;
 }
 
 .svg {
-    width: 70px;
-    height: 70px;
-    opacity: 80%;
-    cursor: pointer;
-    padding: 13px 20px;
-    transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+  width: 70px;
+  height: 70px;
+  opacity: 80%;
+  cursor: pointer;
+  padding: 13px 20px;
+  transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .radio:checked + label .svg {
-    color: rgb(235, 40, 176);
+  color: rgb(235, 40, 176);
 }
 
 .svg:hover {
-    color: rgb(235, 40, 176);
-    transform: translateY(-5px); 
+  color: rgb(235, 40, 176);
+  transform: translateY(-5px); 
 }
 
-  
-  .container-input {
-    position: relative;
-    display: inline-block;
-    padding-top: 20px;
-  }
-  
+.container-input {
+  position: relative;
+  display: inline-block;
+  padding-top: 20px;
+}
+
+.input {
+  padding: 10px 10px 10px 40px; /* Added padding-left to make space for SVG */
+  border-radius: 9999px;
+  transition: all .2s ease-in-out;
+  outline: none;
+  opacity: 0.8;
+}
+
+.container-input svg {
+  position: absolute;
+  top: 65%;
+  left: 10px; /* Ensure the SVG is inside the input field */
+  transform: translateY(-50%);
+  pointer-events: none; /* Prevent interaction with SVG */
+}
+
+.input:focus {
+  opacity: 1;
+}
+
+.map {
+  position: relative;
+  z-index: 0;
+}
+
+@media (min-width: 300px) {
   .input {
-    width: 250px;
-    padding: 10px 10px 10px 40px; /* Added padding-left to make space for SVG */
-    border-radius: 9999px;
-    border: solid 1px #333;
-    transition: all .2s ease-in-out;
-    outline: none;
-    opacity: 0.8;
+    width: 300px;
   }
-  
-  .container-input svg {
-    position: absolute;
-    top: 65%;
-    left: 10px; /* Ensure the SVG is inside the input field */
-    transform: translateY(-50%);
-    pointer-events: none; /* Prevent interaction with SVG */
-  }
-  
+
   .input:focus {
-    opacity: 1;
     width: 350px;
   }
-  
-  .map {
-    position: relative;
-    z-index: 0;
+}
+
+@media (min-width: 600px) {
+  .input {
+    width: 600px;
   }
+
+  .input:focus {
+    width: 700px;
+  }
+}
+/*!*************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/app/loading/loading.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************/
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .centerlond {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100vw; 
+    height: 100vh; 
+  }
+  
+  .dot-wave {
+    position: relative; /* เปลี่ยนจาก absolute เป็น relative */
+    --uib-size: 50px;
+    --uib-speed: 0.6s;
+    --uib-color: #0d0909;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: var(--uib-size);
+    height: calc(var(--uib-size) * 0.17);
+    padding-top: calc(var(--uib-size) * 0.34);
+  }
+  
+  .dot-wave__dot {
+    flex-shrink: 0;
+    width: calc(var(--uib-size) * 0.17);
+    height: calc(var(--uib-size) * 0.17);
+    border-radius: 50%;
+    background-color: var(--uib-color);
+    will-change: transform;
+  }
+  
+  .dot-wave__dot:nth-child(1) {
+    animation: jump824 var(--uib-speed) ease-in-out
+      calc(var(--uib-speed) * -0.45) infinite;
+  }
+  
+  .dot-wave__dot:nth-child(2) {
+    animation: jump824 var(--uib-speed) ease-in-out
+      calc(var(--uib-speed) * -0.3) infinite;
+  }
+  
+  .dot-wave__dot:nth-child(3) {
+    animation: jump824 var(--uib-speed) ease-in-out
+      calc(var(--uib-speed) * -0.15) infinite;
+  }
+  
+  .dot-wave__dot:nth-child(4) {
+    animation: jump824 var(--uib-speed) ease-in-out infinite;
+  }
+  
+  @keyframes jump824 {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+  
+    50% {
+      transform: translateY(-200%);
+    }
+  }
+  
