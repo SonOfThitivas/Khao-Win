@@ -1,20 +1,28 @@
-"use client"
-import React, {useState, useEffect} from 'react';
-import dynamic from 'next/dynamic';     // For NestJS
+// app/page.js
+"use client";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import './page.css';
 
-function page() {
+function Page() {
+  return (
+    <div className="logoin">
 
-    // Import Map Components
-    const Map = dynamic(async () => await import("./components/Map"),{
-        ssr: false,
-        loading: () => <p>loading...</p>
-    })
-
-    return (
-        <div>
-            <Map />
-        </div>
-    );
+      <header>
+        <Image src="/LOGO1.png" alt="logo" width={400} height={400} className="center"/>
+      </header>
+      <div className="conti">
+        <p>
+          <Link href="/home">Tap To Continue</Link>
+        </p>
+      </div>
+      <footer>
+        <p>Contact or Support developers</p>
+        <p><a href="mailto:1234@kmutnb.ac.th">1234@kmutnb.ac.th</a></p>
+      </footer>
+    </div>
+  );
 }
 
-export default page;
+export default Page;
