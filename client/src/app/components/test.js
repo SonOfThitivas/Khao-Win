@@ -1,0 +1,100 @@
+const posWin = [
+    {
+        "name":"ปากซอยวงศ์สว่าง 11",
+        "latlng":[13.82129, 100.52054],
+        "time":["05:30","23:00"],
+        "amount":20,
+        "mostPeopleWhen":"เช้า",
+        "credit":"คุณโหน่ง สยุมพร",
+        "price":{
+            "วัดทอง":[20,25,30],
+            "วัดเลียบ":[20,25,30],
+            "ตลาดบางซ่อน":25,
+            "วัดเซิงหวาย":40,
+            "รพ.เกษมราษฎร์-ประชาชื่น":30,
+            "วัดน้อย":[40,50],
+            "ตลาดเตาปูน":40,
+            "บิ๊กซี นนทบุรี":40,
+            "โลตัส ประชาชื่น":50,
+            "สน.ประชาชื่น":50,
+            "ร.ร.สตรีนนท์":50,
+            "วัดเสมียน":60,
+            "ไทยพาณิชย์":60,
+            "เมเจอร์-รัชโยธิน":[60,70],
+            "ท่าน้ำนนท์":70,
+            "หมอชิต":80
+        }
+    },
+    {
+        "name":"MRT วงศ์สว่าง",
+        "latlng":[13.82799, 100.52786],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"ประตูหน้า มจพ.",
+        "latlng":[13.81867, 100.51425],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"ซอยพิบูลสงคราม 22",
+        "latlng":[13.83219, 100.50090],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"ซอยพิบูลสงคราม 22/22",
+        "latlng":[13.83207, 100.51337],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"ตลาด NorthZone ตรงข้าม 7-11",
+        "latlng":[13.82728, 100.51428],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"Zoom Cafe",
+        "latlng":[13.82746, 100.51469],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"หน้าหอ @sign",
+        "latlng":[13.82451, 100.51605],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+    {
+        "name":"ประตูหลัง มจพ.",
+        "latlng":[13.82244, 100.51509],
+        "time":undefined,
+        "amount":undefined,
+        "mostPeopleWhen":undefined,
+        "credit":undefined,
+        "price":undefined
+    },
+];

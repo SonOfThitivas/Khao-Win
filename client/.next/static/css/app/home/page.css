@@ -17,12 +17,12 @@ html, body {
 
 footer {
   flex-shrink: 0;
-  width: 100%; /* ให้ footer กว้างเท่ากับหน้าจอ */
+  width: 100%;
   display: flex;
-  justify-content: center; /* จัดตำแหน่งตรงกลางในแนวนอน */
-  align-items: center; /* จัดตำแหน่งตรงกลางในแนวตั้ง */
+  justify-content: center;
+  align-items: center;
   border-top: none;
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   left: 0;
   right: 0;
@@ -75,6 +75,7 @@ header {
   cursor: pointer;
   padding: 13px 20px;
   transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+  color: black;
 }
 
 .radio:checked + label .svg {

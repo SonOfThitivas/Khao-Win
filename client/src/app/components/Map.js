@@ -6,19 +6,20 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
 
+// data
+import * as fetchData from "./data.json";
+
 function Map() {
     // Latitude and Longitude of positions
-    const posWin = [
-        [[13.82799, 100.52786], "MRT Yaek Wongsawang"],
-        [[13.82129, 100.52054], "Pak Soi Wongsawang 11", [[13.82129, 100.52054], [13.82006, 100.52266]]],
-        [[13.81867, 100.51425], "KMUTNB's FrontGate"],
-        [[13.83219, 100.50090], "Piboonsongkhraam Soi 22"],
-        [[13.83207, 100.51337], "Piboonsongkhraam Soi 22/22"],
-        [[13.82728, 100.51428], "North's zone opposite 7-Eleven"],
-        [[13.82746, 100.51469], "Zoom Cafe"],
-        [[13.82451, 100.51605], "Ruenmainam"],
-        [[13.82244, 100.51509], "KMUTNB's BackGate"],
-    ];
+    const dataObjectArray = Object.entries(fetchData);
+    dataObjectArray.pop();
+    console.log(dataObjectArray);
+    const price = dataObjectArray.map((index) => {
+        if (index[1]["price"] == null) return null;
+        let priceArray = Object.entries(index[1]["price"]);
+        return priceArray;
+    });
+    console.log(price);
 
     // Latitude and Longitude for blocking area display
     const upperBound = latLng(13.9071, 100.5065);
@@ -45,10 +46,19 @@ function Map() {
                 />
                 
                 {/* Pins out Win's position */}
-                {posWin.map((p, index) => (
-                    <Marker key={index} position={p[0]}>
-                        <Popup>{p[1]}</Popup>
-                        <Tooltip>{p[1]}</Tooltip>
+                {dataObjectArray.map((obj) => (
+                    <Marker key={obj[1]["name"]} position={obj[1]["latlng"]}>
+                        <Popup>
+                            สถานที่: {obj[1]["name"]}<br/>
+                            เวลาบริการ: {(obj[1]["time"] != null) ? obj[1]["time"][0] + " - " +  obj[1]["time"][1]: '-'}<br/>
+                            จำนวนวินต่อวัน: {(obj[1]["amount"] != null) ? obj[1]["amount"]: '-'}<br/>
+                            ช่วงที่มีผู้ใช้บริการเยอะ: {(obj[1]["mostPeopleWhen"] != null) ? obj[1]["mostPeopleWhen"]: '-'}<br/>
+                            ราคา: {
+                                (obj[1]["mostPeopleWhen"] == null) ? '-' : '-'
+                                }
+                            
+                        </Popup>
+                        <Tooltip>{obj[1]["name"]}</Tooltip>
                     </Marker>
                 ))}
             </MapContainer>

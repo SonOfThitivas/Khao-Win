@@ -1,0 +1,207 @@
+html, body {
+    height: 100%;
+    background-color: #e8e8e8;
+    margin: 0; 
+  }
+  
+  .complaintpage {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* จัดกลางในแนวตั้ง */
+    align-items: center; /* จัดกลางในแนวนอน */
+  }
+  
+  .footermanagement {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: none;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+  }
+  
+  /* home.css */
+  #navbody {
+    width: 300px;
+    height: 60px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 40px;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.041);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  
+  .ul {
+    list-style: none;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding: 0; /* เพิ่ม padding หากต้องการให้มีระยะห่าง */
+  }
+  
+  .li {
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .radio {
+    display: none;
+  }
+  
+  .svg {
+    width: 70px;
+    height: 70px;
+    opacity: 80%;
+    cursor: pointer;
+    padding: 13px 20px;
+    transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+    color: black;
+  }
+  
+  .radio:checked + label .svg {
+    color: rgb(235, 40, 176);
+  }
+  
+  .svg:hover {
+    color: rgb(235, 40, 176);
+    transform: translateY(-5px); 
+  }
+
+  .complaint {
+    position: absolute;
+    display: flex;
+    justify-content: center; /* จัดตำแหน่งตรงกลางในแนวนอน */
+    align-items: center; /* จัดตำแหน่งตรงกลางในแนวตั้ง */
+  }
+
+  .form-container {
+    max-width: 700px;
+    background-color: rgb(255, 255, 255);
+    padding: 30px;
+    border-left: 3px solid rgb(235, 40, 176);
+    border-radius: 15px; /* ขอบมนทั้งหมด */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงานุ่มนวล */
+  }
+  
+  .heading {
+    display: block;
+    color: black;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  
+  .form-container .form .input {
+    color: #001925;
+    width: 100%;
+    background-color: #e8e8e8;
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+    border-left: 1px solid transparent;
+    border-radius: 8px; /* ขอบมนสำหรับ input */
+  }
+  
+  .form-container .form .input:focus {
+    border-left: 3px solid rgb(235, 40, 176);
+  }
+  
+  .form-container .form .textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background-color: #e8e8e8;
+    color: rgb(235, 40, 176);
+    font-weight: bold;
+    resize: none;
+    max-height: 150px;
+    margin-bottom: 20px;
+    border-left: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px; /* ขอบมนสำหรับ textarea */
+  }
+  
+  .form-container .form .textarea:focus {
+    border-left: 3px solid rgb(235, 40, 176);
+  }
+  
+  .form-container .form .button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .form-container .form .button-container .send-button {
+    flex-basis: 70%;
+    background: rgb(235, 40, 176);
+    padding: 10px;
+    color: #001925;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px; /* ขอบมนสำหรับปุ่ม */
+  }
+  
+  .form-container .form .button-container .send-button:hover {
+    background: transparent;
+    background-color: #e8e8e8;
+    border: 1px solid rgb(235, 40, 176);
+    color: rgb(235, 40, 176);
+  }
+  
+  .form-container .form .button-container .reset-button-container {
+    filter: drop-shadow(1px 1px 0px rgb(235, 40, 176));
+    flex-basis: 30%;
+    border-radius: 8px; /* ขอบมนสำหรับ container ของปุ่ม reset */
+  }
+  
+  .form-container .form .button-container .reset-button-container .reset-button {
+    position: relative;
+    text-align: center;
+    padding: 10px;
+    color: rgb(235, 40, 176);
+    font-weight: bold;
+    background: #001925;
+    border-radius: 8px; /* ขอบมนสำหรับปุ่ม reset */
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .form-container .form .button-container .reset-button-container .reset-button:hover {
+    background: rgb(235, 40, 176);
+    color: #001925;
+  }
+  
+  
+  @media (min-width: 300px) {
+    .input {
+      width: 300px;
+    }
+  
+    .input:focus {
+      width: 350px;
+    }
+  }
+  
+  @media (min-width: 600px) {
+    .input {
+      width: 600px;
+    }
+  
+    .input:focus {
+      width: 700px;
+    }
+  }
