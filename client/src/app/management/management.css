@@ -27,7 +27,7 @@ html, body {
     right: 0;
   }
   
-  /* home.css */
+  /* footer ui */
   #navbody {
     width: 300px;
     height: 60px;
@@ -77,6 +77,7 @@ html, body {
     transform: translateY(-5px); 
   }
 
+  /*complaint*/
   .complaint {
     position: absolute;
     display: flex;

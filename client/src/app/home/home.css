@@ -12,7 +12,7 @@ html, body {
   flex-direction: column;
 }
 
-footer {
+.footerhome {
   flex-shrink: 0;
   width: 100%;
   display: flex;
@@ -26,7 +26,7 @@ footer {
   z-index: 11;
 }
 
-header {
+.headerhome {
   flex-shrink: 0;
   position: absolute;
   z-index: 10;

@@ -16,7 +16,7 @@ html, body {
     font-size: 1.5rem;
   }
   
-  footer {
+  .footerabout {
     flex-shrink: 0;
     width: 100%;
     display: flex;

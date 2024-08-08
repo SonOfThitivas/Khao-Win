@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 function Page() {
   return (
     <div className="logoin">
-
       <div className='headerpage'>
         <Image src="/LOGO1.png" alt="logo" width={400} height={400} className="center"/>
       </div>
