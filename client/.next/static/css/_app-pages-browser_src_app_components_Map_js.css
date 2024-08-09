@@ -688,3 +688,73 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	margin: -28px 16px; /* margin top and left to position tooltipAnchor, even if direction 'bottom' or 'right' */
 	}
 
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/app/components/map.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
+/* https://github.com/mapbox/mapbox.js/blob/001754177f3985c0e6b4a26e3c869b0c66162c99/theme/style.css#L321-L366 */
+
+/* popup */
+/* .leaflet-popup {
+    position:absolute;
+    text-align:center;
+    pointer-events:none;
+} */
+
+.leaflet-popup-content-wrapper {
+
+    border-width: 1px;
+
+    --tw-border-opacity: 1;
+
+    border-color: rgb(0 0 0 / var(--tw-border-opacity));
+
+    --tw-bg-opacity: 1;
+
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+
+    font-size: 0.875rem;
+
+    line-height: 1.25rem;
+
+    opacity: 0.9
+}
+
+/* .leaflet-popup-content {
+    padding:10px 10px 15px;
+    margin:0;
+    line-height:inherit;
+} */
+
+/* .leaflet-popup-tip-container {
+    width:20px;
+    height:20px;
+    margin:0 auto;
+    position:relative;
+} */
+
+/* .leaflet-popup-tip {
+    width:0;
+    height:0;
+    margin:0;
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-top:10px solid #fff;
+    box-shadow: none;
+} */
+
+/* .leaflet-popup-close-button {
+    text-indent:-999em;
+    position:absolute;
+    top:0;right:0;
+    pointer-events:all;
+} */
+
+/* .leaflet-popup-close-button:hover {
+    background-color:#f8f8f8;
+} */
+
+/* .leaflet-popup-scrolled {
+    overflow:auto;
+    border-bottom:1px solid #ddd;
+    border-top:1px solid #ddd;
+} */

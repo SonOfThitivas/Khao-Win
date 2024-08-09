@@ -1,24 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, CircleMarker, useMap } from 'react-leaflet';
-import { latLng, latLngBounds } from 'leaflet';
+import React, { useState, useEffect} from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, CircleMarker, useMap } from 'react-leaflet';      // map component
+import { latLng, latLngBounds } from 'leaflet';     // Latitude and Longitude data
+
+//      Map and Marker style 
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
+import "./map.css";
 
+//      Data fetching
 import * as fetchData from "./data.json";
 
 function Map() {
-    const dataObjectArray = Object.entries(fetchData);
-    dataObjectArray.pop();
+    //      fetching Data
+    const [winData, setWinData] = useState(Object);
 
+    useEffect(()=>{
+        fetch("http://localhost:5000/api/fetchData").then(
+            response => response.json()
+        ).then(
+            data => {
+                console.log(data);
+                setWinData(data);
+            }
+        )
+    },[])
+
+    const winDateList = winData;
+
+    // const dataObjectArray = Object.entries(fetchData);
+    // dataObjectArray.pop(); //       remove a default
+    // const [priceContent, setPriceContent] = useState("");
+
+
+    //      Map bounds
     const upperBound = latLng(13.9071, 100.5065);
     const lowerBound = latLng(13.7356, 100.5194);
     const rightBound = latLng(13.8231, 100.6294);
     const leftBound = latLng(13.8216, 100.4130);
     const bounds = latLngBounds([upperBound, leftBound, lowerBound, rightBound]);
 
+    // GPS tracking variable
     const [currentPosition, setCurrentPosition] = useState(null);
 
+
+    //      GPS tracking
     function MoveMapToCurrentPosition({ position }) {
         const map = useMap();
         useEffect(() => {
@@ -29,6 +55,8 @@ function Map() {
         return null;
     }
 
+
+    //      GPS's user Permission
     const handleButtonClick = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -67,18 +95,40 @@ function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {dataObjectArray.map((obj) => (
+                
+
+                {/* {fetchData.map((obj) => (
+                    
                     <Marker key={obj[1]["name"]} position={obj[1]["latlng"]}>
                         <Popup>
-                            สถานที่: {obj[1]["name"]}<br />
-                            เวลาบริการ: {(obj[1]["time"] != null) ? obj[1]["time"][0] + " - " + obj[1]["time"][1] : '-'}<br />
-                            จำนวนวินต่อวัน: {(obj[1]["amount"] != null) ? obj[1]["amount"] : '-'}<br />
-                            ช่วงที่มีผู้ใช้บริการเยอะ: {(obj[1]["mostPeopleWhen"] != null) ? obj[1]["mostPeopleWhen"] : '-'}<br />
-                            ราคา: {(obj[1]["mostPeopleWhen"] == null) ? '-' : '-'}
+                            <header className="text-center text-2xl font-bold">
+                                {obj[1]["name"]}
+                            </header>
+                            <main className="text-lg">
+                                เวลาบริการ: {(obj[1]["time"] != null) ? obj[1]["time"][0] + " - " + obj[1]["time"][1] : '-'}<br />
+                                จำนวนวินต่อวัน: {(obj[1]["amount"] != null) ? obj[1]["amount"] : '-'}<br />
+                                ช่วงที่มีผู้ใช้บริการเยอะ: {(obj[1]["mostPeopleWhen"] != null) ? obj[1]["mostPeopleWhen"] : '-'}
+                                <div>   
+                                    ราคา: {(obj[1]["price"] == null) ? useEffect(()=>setPriceContent("-"),[]) :
+                                        useEffect(()=>
+                                        {
+                                            const priceObj = obj[1].price;
+                                            let tempContent = "";
+                                            for (const [key, value] of Object.entries(priceObj)){
+                                                tempContent += `<div style="font-size:16px">${key} : ${value} บาท</div>`
+                                            }
+                                            setPriceContent(tempContent);
+                                            console.log(priceContent);
+                                        },[])
+                                    }
+                                    /* https://legacy.reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml 
+                                    <div className=" justify-center" dangerouslySetInnerHTML={{__html: priceContent}}/>
+                                </div>
+                            </main>
+                            
                         </Popup>
                         <Tooltip>{obj[1]["name"]}</Tooltip>
-                    </Marker>
-                ))}
+                    </Marker> */}
 
                 {currentPosition && (
                     <CircleMarker
