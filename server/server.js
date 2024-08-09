@@ -9,7 +9,7 @@ data = {
         "latlng":[13.82799, 100.52786],
         "time":["05:30","23:00"],
         "amount":20,
-        "mostPeopleWhen":"เช้า",
+        "mostUsing":"เช้า",
         "credit":"คุณโหน่ง สยุมพร",
         "price":{
             "วัดทอง":[20,25,30],
@@ -35,7 +35,7 @@ data = {
         "latlng":[13.82129, 100.52054],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -44,7 +44,7 @@ data = {
         "latlng":[13.81867, 100.51425],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -53,7 +53,7 @@ data = {
         "latlng":[13.83219, 100.50090],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -62,7 +62,7 @@ data = {
         "latlng":[13.83207, 100.51337],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -71,7 +71,7 @@ data = {
         "latlng":[13.82728, 100.51428],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -80,7 +80,7 @@ data = {
         "latlng":[13.82746, 100.51469],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -89,7 +89,7 @@ data = {
         "latlng":[13.82451, 100.51605],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     },
@@ -98,7 +98,7 @@ data = {
         "latlng":[13.82244, 100.51509],
         "time":null,
         "amount":null,
-        "mostPeopleWhen":null,
+        "mostUsing":null,
         "credit":null,
         "price":null
     }

@@ -13,20 +13,37 @@ import * as fetchData from "./data.json";
 
 function Map() {
     //      fetching Data
-    const [winData, setWinData] = useState(Object);
+    const [winData, setWinData] = useState(Array);
 
     useEffect(()=>{
         fetch("http://localhost:5000/api/fetchData").then(
             response => response.json()
         ).then(
             data => {
-                console.log(data);
-                setWinData(data);
+                // console.log(data);
+                setWinData(Object.values(data));
+                // console.log(winData);
             }
         )
     },[])
 
-    const winDateList = winData;
+    function priceFormat(priceObj){
+        let i=0
+        let priceList = Object.entries(priceObj);
+        let content = "<div className='item-1'>"
+        for(;i<Math.ceil(priceList.length / 2);i++){
+            let place = priceList[i][0], price = priceList[i][1];
+            content += `<div>${place}: ${price}฿</div>`;
+        }
+        content += "</div><div className='item-2'>";
+        for(;i<priceList.length;i++){
+            let place = priceList[i][0], price = priceList[i][1];
+            content += `<div>${place}: ${price}฿</div>`;
+        }
+        content += "</div>";
+        return content;
+    }
+
 
     // const dataObjectArray = Object.entries(fetchData);
     // dataObjectArray.pop(); //       remove a default
@@ -95,7 +112,33 @@ function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                
+                {
+                    winData.map((obj)=>(
+                        <Marker key={(obj.name)} position={obj.latlng}>
+                            <Popup>
+                                <header className="text-center text-2xl font-bold">
+                                    {obj.name}
+                                </header>
+                                <main className="text-base">
+                                    เวลาบริการ: {(obj.time != null) ? obj.time[0] + " - " + obj.time[1] : '-'}<br />
+                                    จำนวนวินต่อวัน: {(obj.amount != null) ? obj.amount : '-'}<br />
+                                    ช่วงที่มีผู้ใช้บริการเยอะ: {(obj.mostUsing != null) ? obj.mostUsing : '-'}
+                                    <div>   
+                                        ราคา: {(obj.price == null) ? "-" : 
+                                            <div className="flex text-xs" dangerouslySetInnerHTML={{__html: priceFormat(obj.price)}} />
+                                        }
+                                        {/* /* https://legacy.reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml  */}
+                                    </div>
+                                </main>
+                                <footer>
+                                    <br />
+                                    ข้อมูลจาก: {(obj.credit != null) ? obj.credit : "-"}
+                                </footer>
+                            </Popup>
+                            <Tooltip>{obj.name}</Tooltip>
+                        </Marker>
+                    ))
+                }
 
                 {/* {fetchData.map((obj) => (
                     
@@ -106,10 +149,10 @@ function Map() {
                             </header>
                             <main className="text-lg">
                                 เวลาบริการ: {(obj[1]["time"] != null) ? obj[1]["time"][0] + " - " + obj[1]["time"][1] : '-'}<br />
-                                จำนวนวินต่อวัน: {(obj[1]["amount"] != null) ? obj[1]["amount"] : '-'}<br />
-                                ช่วงที่มีผู้ใช้บริการเยอะ: {(obj[1]["mostPeopleWhen"] != null) ? obj[1]["mostPeopleWhen"] : '-'}
+                                จำนวนวินต่อวัน: {(obj.amount != null) ? obj.amount : '-'}<br />
+                                ช่วงที่มีผู้ใช้บริการเยอะ: {(obj.mostUsing != null) ? obj.mostUsing : '-'}
                                 <div>   
-                                    ราคา: {(obj[1]["price"] == null) ? useEffect(()=>setPriceContent("-"),[]) :
+                                    ราคา: {(obj.price == null) ? useEffect(()=>setPriceContent("-"),[]) :
                                         useEffect(()=>
                                         {
                                             const priceObj = obj[1].price;

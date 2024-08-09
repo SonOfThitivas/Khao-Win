@@ -1,4 +1,4 @@
-// File: D:\vscode-files\ToWin\client\src\app\layout.js
+// File: C:\Users\ramet\Documents\GitHub\ToWin\To-Win\client\src\app\layout.js
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
