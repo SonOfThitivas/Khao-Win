@@ -24,6 +24,12 @@ function Management() {
         window.location.href = `mailto:khaowinreport@gmail.com?subject=${subject}&body=${body}`;
     };
 
+    const resetForm = () => {
+        document.getElementById('name').value = '';
+        document.getElementById('mail').value = '';
+        document.getElementById('message').value = '';
+    };
+
     return (
         <div className='complaintpage'>
             <div className='complaint'>
@@ -43,7 +49,7 @@ function Management() {
                         <div className='button-container'>
                             <div className='send-button' onClick={sendEmail}>Send</div>
                             <div className='reset-button-container'>
-                                <div id="reset-btn" className='reset-button'>Reset</div>
+                                <div id="reset-btn" className='reset-button' onClick={resetForm}>Reset</div>
                             </div>
                         </div>
                     </div>

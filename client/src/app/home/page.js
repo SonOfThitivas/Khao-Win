@@ -1,11 +1,10 @@
-"use client";
+'use client'
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Loading from '../loading/page';
-import { useRouter } from 'next/navigation'; // ใช้ next/navigation แทน
+import { useRouter } from 'next/navigation';
 
-// Import Map Components
 const Map = dynamic(() => import('../components/Map'), {
   ssr: false,
   loading: () => <Loading />
@@ -13,17 +12,22 @@ const Map = dynamic(() => import('../components/Map'), {
 
 function Home() {
   const router = useRouter();
-  const searchInputRef = useRef(null); // สร้าง ref สำหรับ input
+  const searchInputRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState(''); // สร้าง state สำหรับเก็บข้อมูลการค้นหา
 
   const handleRadioChange = (event) => {
     const selectedValue = event.target.value;
     if (selectedValue) {
       if (selectedValue === 'focusSearch') {
-        searchInputRef.current.focus(); // ทำให้ input โฟกัส
+        searchInputRef.current.focus();
       } else {
-        router.push(selectedValue); // นำทางไปยังหน้าที่เลือก
+        router.push(selectedValue);
       }
     }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value); // อัปเดตค่าการค้นหา
   };
 
   return (
@@ -35,7 +39,9 @@ function Home() {
             placeholder="Search" 
             name="text" 
             className="input" 
-            ref={searchInputRef} // เพิ่ม ref ที่นี่
+            ref={searchInputRef} 
+            value={searchTerm} // ใช้ searchTerm เป็นค่าใน input
+            onChange={handleSearchChange} // เรียก handleSearchChange เมื่อมีการเปลี่ยนแปลง
           />
           <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" aria-label="Search">
             <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fillRule="evenodd"></path>
@@ -43,7 +49,7 @@ function Home() {
         </div>
       </div>
       <div className='map'>
-        <Map />
+        <Map searchTerm={searchTerm} /> {/* ส่ง searchTerm ไปยัง Map */}
       </div>
       <div className='footerhome'>
         <div id="navbody">
