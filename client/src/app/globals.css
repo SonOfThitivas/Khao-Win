@@ -411,7 +411,7 @@ html, body {
 
   .map-button {
     position: absolute;
-    top: 40%;
+    bottom: 15%;
     right: 20px;
     z-index: 1000; /* Ensure the button is above the map */
     background-color: white;
@@ -420,10 +420,17 @@ html, body {
     padding: 10px;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border-radius: 100%;
 }
 
 .map-button:hover {
     background-color: rgb(235, 40, 176);
+}
+
+.svg-icon-show-me {
+  width: 24px;
+  height: 24px;
+  color: black;
 }
 
 

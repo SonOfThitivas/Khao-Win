@@ -71,7 +71,7 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/app/globals.css ***!
   \*****************************************************************************************************************************************************************************************************************************************************************/
 /*
-! tailwindcss v3.4.7 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.9 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -566,6 +566,9 @@ video {
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
+.pointer-events-none {
+  pointer-events: none;
+}
 .flex {
   display: flex;
 }
@@ -578,8 +581,8 @@ video {
 .w-6 {
   width: 1.5rem;
 }
-.justify-center {
-  justify-content: center;
+.p-3 {
+  padding: 0.75rem;
 }
 .text-center {
   text-align: center;
@@ -592,10 +595,6 @@ video {
   font-size: 1rem;
   line-height: 1.5rem;
 }
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -606,6 +605,9 @@ video {
 .text-gray-800 {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Oleo+Script&display=swap');
@@ -1017,7 +1019,7 @@ html, body {
 
   .map-button {
     position: absolute;
-    top: 40%;
+    bottom: 15%;
     right: 20px;
     z-index: 1000; /* Ensure the button is above the map */
     background-color: white;
@@ -1026,10 +1028,17 @@ html, body {
     padding: 10px;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border-radius: 100%;
 }
 
 .map-button:hover {
     background-color: rgb(235, 40, 176);
+}
+
+.svg-icon-show-me {
+  width: 24px;
+  height: 24px;
+  color: black;
 }
 
 
