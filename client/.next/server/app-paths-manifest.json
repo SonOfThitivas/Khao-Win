@@ -1,4 +1,9 @@
 {
   "/home/page": "app/home/page.js",
+<<<<<<< HEAD
   "/favicon.ico/route": "app/favicon.ico/route.js"
+=======
+  "/about/page": "app/about/page.js",
+  "/management/page": "app/management/page.js"
+>>>>>>> origin/Frontend-Test
 }

@@ -192,7 +192,11 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
+<<<<<<< HEAD
 /******/ 		__webpack_require__.h = function() { return "2837ebcb8cedb466"; }
+=======
+/******/ 		__webpack_require__.h = function() { return "e608738b1008e0b4"; }
+>>>>>>> origin/Frontend-Test
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

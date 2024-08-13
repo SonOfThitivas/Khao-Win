@@ -566,9 +566,12 @@ video {
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
+<<<<<<< HEAD
 .pointer-events-none {
   pointer-events: none;
 }
+=======
+>>>>>>> origin/Frontend-Test
 .flex {
   display: flex;
 }
@@ -578,11 +581,25 @@ video {
 .h-screen {
   height: 100vh;
 }
+<<<<<<< HEAD
 .w-6 {
   width: 1.5rem;
 }
 .p-3 {
   padding: 0.75rem;
+=======
+.h-9 {
+  height: 2.25rem;
+}
+.w-6 {
+  width: 1.5rem;
+}
+.w-9 {
+  width: 2.25rem;
+}
+.justify-center {
+  justify-content: center;
+>>>>>>> origin/Frontend-Test
 }
 .text-center {
   text-align: center;
@@ -594,6 +611,13 @@ video {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+<<<<<<< HEAD
+=======
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+>>>>>>> origin/Frontend-Test
 }
 .text-xs {
   font-size: 0.75rem;
