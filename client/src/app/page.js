@@ -18,7 +18,7 @@ function Page() {
       </div>
       <div className='footerpage'>
         <p>Contact or Support developers</p>
-        <p><a href="mailto:1234@kmutnb.ac.th">1234@kmutnb.ac.th</a></p>
+        <p><a href="mailto:khaowinreport@gmail.com">khaowinreport@gmail.com</a></p>
       </div>
     </div>
   );
