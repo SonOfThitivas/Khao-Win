@@ -7,12 +7,35 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import "./map.css";
 
+// คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งที่กำหนด
+function MoveMapToPosition({ position }) {
+    const map = useMap();
+    useEffect(() => {
+        if (position) {
+            map.setView(position, 16, { animate: false });
+        }
+    }, [position, map]);
+    return null;
+}
+
+// คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้
+function MoveMapToCurrentPosition({ position }) {
+    const map = useMap();
+    useEffect(() => {
+        if (position) {
+            map.setView(position, map.getZoom(), { animate: false });
+        }
+    }, [position, map]);
+    return null;
+}
+
 function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
     const supabase = createClient();
     const [winData, setWinData] = useState([]);
     const [currentPosition, setCurrentPosition] = useState(null);
     const [error, setError] = useState(null);
 
+    // ฟังก์ชันดึงข้อมูลจาก Supabase
     const getData = useCallback(async () => {
         try {
             const { data, error } = await supabase.from("KhaoWinTable").select('*');
@@ -28,6 +51,7 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
         getData();
     }, [getData]);
 
+    // ฟังก์ชันกรองข้อมูลตามคำค้นหา
     const filterData = () => {
         return winData.filter(obj =>
             obj.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
@@ -36,6 +60,7 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
 
     const filteredData = filterData();
 
+    // เมื่อมีข้อมูลที่ถูกกรองแล้ว อัปเดตตำแหน่งศูนย์กลางของแผนที่
     useEffect(() => {
         if (filteredData.length > 0 && onMapCenterUpdate) {
             const firstResult = filteredData[0];
@@ -43,6 +68,7 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
         }
     }, [filteredData, onMapCenterUpdate]);
 
+    // ฟังก์ชันจัดการการคลิกปุ่มเพื่อแสดงตำแหน่งปัจจุบัน
     const handleButtonClick = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -65,6 +91,7 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
         }
     };
 
+    // ฟังก์ชันจัดการข้อมูลช่วงเวลาที่มีผู้ใช้เยอะ
     function mostUserWhenFunc(mostUserWhenList){
         let content = mostUserWhenList[0];
 
@@ -75,6 +102,8 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
         }
         return content;
     }
+
+    // ฟังก์ชันจัดรูปแบบราคา
     function priceFormat(priceObj) {
         let i = 0;
         let priceList = Object.entries(priceObj);
@@ -93,28 +122,23 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
         return content;
     }
 
-    function MoveMapToPosition({ position }) {
-        const map = useMap();
-        useEffect(() => {
-            if (position) {
-                map.setView(position, 16); // Center map at found location with zoom level 16
-            }
-        }, [position, map]);
-        return null;
-    }
-
+    // กำหนดขอบเขตของแผนที่
     const upperBound = latLng(13.9071, 100.5065);
     const lowerBound = latLng(13.7356, 100.5194);
     const rightBound = latLng(13.8231, 100.6294);
     const leftBound = latLng(13.8216, 100.4130);
     const bounds = latLngBounds([upperBound, leftBound, lowerBound, rightBound]);
 
+    // กำหนดตำแหน่งเริ่มต้นและระดับซูม
+    const initialCenter = [13.8304, 100.5147];
+    const initialZoom = 16;
+
     return (
         <div>
             {error && <div className="error-message">{error}</div>}
             <MapContainer 
-                center={mapCenter || [13.8304, 100.5147]} 
-                zoom={16} 
+                center={mapCenter || initialCenter} 
+                zoom={initialZoom} 
                 scrollWheelZoom={true}
                 maxBounds={bounds}
                 className="h-screen">
@@ -159,8 +183,10 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
                     </CircleMarker>
                 )}
 
-                {currentPosition && <MoveMapToPosition position={currentPosition} />}
-                {mapCenter && <MoveMapToPosition position={mapCenter} />}
+                {/* เลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้ */}
+                {currentPosition && <MoveMapToCurrentPosition position={currentPosition} />}
+                {/* เลื่อนแผนที่ไปยังตำแหน่งแรกของผลลัพธ์การค้นหา */}
+                {filteredData.length > 0 && <MoveMapToPosition position={filteredData[0].latlng} />}
             </MapContainer>
 
             <button
