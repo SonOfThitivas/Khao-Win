@@ -7,84 +7,68 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import "./map.css";
 
+// คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งที่กำหนด
+function MoveMapToPosition({ position }) {
+    const map = useMap();
+    useEffect(() => {
+        if (position) {
+            map.setView(position, 16, { animate: false });
+        }
+    }, [position, map]);
+    return null;
+}
 
+// คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้
+function MoveMapToCurrentPosition({ position }) {
+    const map = useMap();
+    useEffect(() => {
+        if (position) {
+            map.setView(position, map.getZoom(), { animate: false });
+        }
+    }, [position, map]);
+    return null;
+}
 
-function Map({ searchTerm }) { // รับ searchTerm จาก props
+function Map({ searchTerm, mapCenter, onMapCenterUpdate }) {
     const supabase = createClient();
-
     const [winData, setWinData] = useState([]);
-
-    const getData = useCallback(async ()=> {
-        try{
-            const {data, error, status} = await supabase
-                .from("KhaoWinTable")
-                .select('*');
-
-            if (error && status !== 406){
-                throw error;
-            }
-            
-            if(data){
-                setWinData(data);
-            }
-        }catch(error){
-            alert('Error loading user data!')
-
-        }
-    },[supabase]);
-
-    useEffect(()=>{
-        getData();
-    },[getData]);
-    
-
-    function mostUserWhenFunc(mostUserWhenList){
-        let content = mostUserWhenList[0];
-
-        if (mostUserWhenList.length > 1){
-            for(let i=1;i<mostUserWhenList.length;i++){
-                content += `, ${mostUserWhenList[i]}`;
-            }
-        }
-        return content;
-    }
-
-    function priceFormat(priceObj) {
-        let i = 0;
-        let priceList = Object.entries(priceObj);
-        
-        let content = "<div className=' p-3'>";
-        for (; i < Math.ceil(priceList.length / 2); i++) {
-            let place = priceList[i][0], price = priceList[i][1];
-            content += `<div>${place}: ${price}฿</div>`;
-        }
-        content += "</div><div className=' p-3'>";
-        for (; i < priceList.length; i++) {
-            let place = priceList[i][0], price = priceList[i][1];
-            content += `<div>${place}: ${price}฿</div>`;
-        }
-        content += "</div>";
-        return content;
-    }
-
-    const upperBound = latLng(13.9071, 100.5065);
-    const lowerBound = latLng(13.7356, 100.5194);
-    const rightBound = latLng(13.8231, 100.6294);
-    const leftBound = latLng(13.8216, 100.4130);
-    const bounds = latLngBounds([upperBound, leftBound, lowerBound, rightBound]);
-
     const [currentPosition, setCurrentPosition] = useState(null);
+    const [error, setError] = useState(null);
 
-    function MoveMapToCurrentPosition({ position }) {
-        const map = useMap();
-        useEffect(() => {
-            if (position) {
-                map.setView(position, map.getZoom());
-            }
-        }, [position, map]);
-        return null;
-    }
+    // ฟังก์ชันดึงข้อมูลจาก Supabase
+    const getData = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("KhaoWinTable").select('*');
+            if (error) throw error;
+            setWinData(data || []);
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
 
+    useEffect(() => {
+        getData();
+    }, [getData]);
+
+    // ฟังก์ชันกรองข้อมูลตามคำค้นหา
+    const filterData = () => {
+        return winData.filter(obj =>
+            obj.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        );
+    };
+
+    const filteredData = filterData();
+
+    // เมื่อมีข้อมูลที่ถูกกรองแล้ว อัปเดตตำแหน่งศูนย์กลางของแผนที่
+    useEffect(() => {
+        if (filteredData.length > 0 && onMapCenterUpdate) {
+            const firstResult = filteredData[0];
+            onMapCenterUpdate(firstResult.latlng);
+        }
+    }, [filteredData, onMapCenterUpdate]);
+
+    // ฟังก์ชันจัดการการคลิกปุ่มเพื่อแสดงตำแหน่งปัจจุบัน
     const handleButtonClick = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -107,29 +91,64 @@ function Map({ searchTerm }) { // รับ searchTerm จาก props
         }
     };
 
-    // กรองข้อมูลที่ตรงกับ searchTerm
-    const filteredData = winData.filter(obj => 
-        obj.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // ฟังก์ชันจัดการข้อมูลช่วงเวลาที่มีผู้ใช้เยอะ
+    function mostUserWhenFunc(mostUserWhenList){
+        let content = mostUserWhenList[0];
+
+        if (mostUserWhenList.length > 1){
+            for(let i=1;i<mostUserWhenList.length;i++){
+                content += `, ${mostUserWhenList[i]}`;
+            }
+        }
+        return content;
+    }
+
+    // ฟังก์ชันจัดรูปแบบราคา
+    function priceFormat(priceObj) {
+        let i = 0;
+        let priceList = Object.entries(priceObj);
+        
+        let content = "<div className=' p-3'>";
+        for (; i < Math.ceil(priceList.length / 2); i++) {
+            let place = priceList[i][0], price = priceList[i][1];
+            content += `<div>${place}: ${price}฿</div>`;
+        }
+        content += "</div><div className=' p-3'>";
+        for (; i < priceList.length; i++) {
+            let place = priceList[i][0], price = priceList[i][1];
+            content += `<div>${place}: ${price}฿</div>`;
+        }
+        content += "</div>";
+        return content;
+    }
+
+    // กำหนดขอบเขตของแผนที่
+    const upperBound = latLng(13.9071, 100.5065);
+    const lowerBound = latLng(13.7356, 100.5194);
+    const rightBound = latLng(13.8231, 100.6294);
+    const leftBound = latLng(13.8216, 100.4130);
+    const bounds = latLngBounds([upperBound, leftBound, lowerBound, rightBound]);
+
+    // กำหนดตำแหน่งเริ่มต้นและระดับซูม
+    const initialCenter = [13.8304, 100.5147];
+    const initialZoom = 16;
 
     return (
         <div>
+            {error && <div className="error-message">{error}</div>}
             <MapContainer 
-                center={[13.8304, 100.5147]}
-                zoom={16}
+                center={mapCenter || initialCenter} 
+                zoom={initialZoom} 
                 scrollWheelZoom={true}
-                maxBounds = {bounds}
-                zoomControl={false}
-                doubleClickZoom={false}
-                className="h-screen"
-            >
+                maxBounds={bounds}
+                className="h-screen">
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
                 {filteredData.map((obj) => (
-                    <Marker key={obj.name} position={obj.latlng}>
+                    <Marker key={obj.id} position={obj.latlng}>
                         <Popup className="pointer-events-none">
                             <header className="text-center text-2xl font-bold">
                                 {obj.name}
@@ -164,7 +183,10 @@ function Map({ searchTerm }) { // รับ searchTerm จาก props
                     </CircleMarker>
                 )}
 
+                {/* เลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้ */}
                 {currentPosition && <MoveMapToCurrentPosition position={currentPosition} />}
+                {/* เลื่อนแผนที่ไปยังตำแหน่งแรกของผลลัพธ์การค้นหา */}
+                {filteredData.length > 0 && <MoveMapToPosition position={filteredData[0].latlng} />}
             </MapContainer>
 
             <button
