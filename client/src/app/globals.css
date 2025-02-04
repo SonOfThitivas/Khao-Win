@@ -86,7 +86,6 @@ html, body {
   font-size: 18px;
   padding: 10px;
   flex: 1;
-  border: red solid 1px;
   /* flex-shrink: 0; */
   /* justify-content: center;
   align-items: center; */
