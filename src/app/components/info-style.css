@@ -1,0 +1,14 @@
+.priceTable > div {
+    font-size: small;
+    /* border: 1px solid black; */
+}
+
+.destName {
+    /* padding-right: 0.5em; */
+    text-align: end;
+}
+
+.destPrice{
+    padding-left: 0.5em;
+    text-align: start;
+}

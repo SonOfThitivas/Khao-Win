@@ -1,0 +1,503 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, CircleMarker, useMap } from 'react-leaflet';
+import { latLng, latLngBounds } from 'leaflet';
+import { createClient } from '../utils/supabase/client';
+import "leaflet/dist/leaflet.css";
+import { SlArrowUpCircle, SlArrowDownCircle, SlArrowRightCircle, SlArrowLeftCircle } from "react-icons/sl";
+import { useMediaQuery } from 'react-responsive';
+// import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
+// import "leaflet-defaulticon-compatibility";
+import "./map.css";
+
+import Info from "./info.js";
+
+// Icon Error: https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-261904061 02/22/2025 Karn
+import L from 'leaflet';
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
+// // คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งที่กำหนด
+// function MoveMapToPosition({ position }) {
+//     const map = useMap();
+//     useEffect(() => {
+//         if (position) {
+//             map.setView(position, 16, { animate: false });
+//         }
+//     }, [position, map]);
+//     return null;
+// }
+
+// // คอมโพเนนต์สำหรับเลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้
+// function MoveMapToCurrentPosition({ position }) {
+//     const map = useMap();
+//     useEffect(() => {
+//         if (position) {
+//             map.setView(position, map.getZoom(), { animate: false });
+//         }
+//     }, [position, map]);
+//     return null;
+// }
+
+// const supabase = createClient();
+
+// let { data: win_name, error } = await supabase
+//   .from('win_name')
+//   .select('*');
+  
+
+function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps}) {
+    
+    const supabase = createClient();
+    
+    const [win_name, setwin_name] = useState([]);                   // supabase fetching data variables
+    const [win_price, setwin_price] = useState([]);
+    const [win_location, setwin_location] = useState([]);
+    const [win_time, setwin_time] = useState([]);
+    const [win_rider, setwin_rider] = useState([]);
+    const [win_most_user_time, setwin_most_user_time] = useState([]);
+    const [win_credit, setwin_credit] = useState([]);
+
+    const [info_show, setInfo_show] = useState(false);              // information variables
+    const [info_param, setInfo_param] = useState([]);
+    const isDesktopOrLaptop = useMediaQuery({minWidth: 1224})       // react-responsive
+    const isTabletOrMobile = useMediaQuery({maxWidth: 1224})
+
+    // const [currentPosition, setCurrentPosition] = useState(null);
+
+    const [error, setError] = useState(null);
+    
+    // Fetching data from Supabase
+    // win_name table fetching function
+    const fetch_win_name = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_name").select("*").order("id", {ascending: true});
+            if (error) throw error;
+            setwin_name(data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_price table fetching function
+    const fetch_win_price = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_price").select("*").order("id", {ascending: true});
+            if (error) throw error;
+
+            // Group by id > name > collect prices
+            const filt_data = Object.values(
+                data.reduce((param, { id, name, price }) => {
+                // If id is not yet added
+                if (!param[id]) {
+                    param[id] = { id, dest: [] };
+                }
+            
+                // Find or create the name group within that id
+                let nameGroup = param[id].dest.find(group => group.name === name);
+                if (!nameGroup) {
+                    nameGroup = { name, price: [] };
+                    param[id].dest.push(nameGroup);
+                }
+            
+                // Add price to the name group
+                nameGroup.price.push(price);
+            
+                return param;
+                }, {})
+            );
+            setwin_price(filt_data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_location table fetching function
+    const fetch_win_location = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_location").select("*").order("id", {ascending: true});
+            if (error) throw error;
+            setwin_location(data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_time table fetching function
+    const fetch_win_time = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_time").select("*").order("id", {ascending: true});
+            if (error) throw error;
+
+             // Group by id > time
+             const filt_data = Object.values(
+                data.reduce((param, { id, time}) => {
+
+                // If id is not yet added
+                if (!param[id]) {
+                    param[id] = { id, time: [] };
+                }
+                
+                param[id].time.push(time);
+            
+                return param;
+                }, {})
+            );
+
+            setwin_time(filt_data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_rider table fetching function
+    const fetch_win_rider = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_rider").select("*").order("id", {ascending: true});
+            if (error) throw error;
+            setwin_rider(data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_most_user_time table fetching function
+    const fetch_win_most_user_time = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_most_user_time").select("*").order("id", {ascending: true});
+            if (error) throw error;
+
+            // Group by id > time
+            const filt_data = Object.values(
+                data.reduce((param, { id, time}) => {
+
+                // If id is not yet added
+                if (!param[id]) {
+                    param[id] = { id, time: [] };
+                }
+            
+                param[id].time.push(time);
+            
+                return param;
+                }, {})
+            );
+
+            setwin_most_user_time(filt_data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+    // win_credit table fetching function
+    const fetch_win_credit = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from("win_credit").select("*").order("id", {ascending: true});
+            if (error) throw error;
+            setwin_credit(data || []);
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            setError('Unable to fetch data. Please try again later.');
+        }
+    }, [supabase]);
+
+
+
+    // call function any re-rendered
+    useEffect(() => {
+        fetch_win_name();
+        fetch_win_price();
+        fetch_win_location();
+        fetch_win_time();
+        fetch_win_rider();
+        fetch_win_most_user_time();
+        fetch_win_credit();
+    }, [fetch_win_name, fetch_win_price, fetch_win_location,
+        fetch_win_time, fetch_win_rider, fetch_win_most_user_time,
+        fetch_win_credit
+    ]);
+
+    // console.log(win_price);
+
+    // // ฟังก์ชันกรองข้อมูลตามคำค้นหา
+    // const filterData = () => {
+    //     return winData.filter(obj =>
+    //         obj.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+    //     );
+    // };
+
+    // const filteredData = filterData();
+
+    // // เมื่อมีข้อมูลที่ถูกกรองแล้ว อัปเดตตำแหน่งศูนย์กลางของแผนที่
+    // useEffect(() => {
+    //     if (filteredData.length > 0 && onMapCenterUpdate) {
+    //         const firstResult = filteredData[0];
+    //         onMapCenterUpdate(firstResult.latlng);
+    //     }
+    // }, [filteredData, onMapCenterUpdate]);
+
+    // // ฟังก์ชันจัดการการคลิกปุ่มเพื่อแสดงตำแหน่งปัจจุบัน
+    // const handleButtonClick = () => {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(
+    //             (position) => {
+    //                 const { latitude, longitude } = position.coords;
+    //                 setCurrentPosition([latitude, longitude]);
+    //             },
+    //             (error) => {
+    //                 console.error("Error fetching location: ", error);
+    //                 alert("ไม่สามารถเข้าถึงตำแหน่งของคุณได้ กรุณาตรวจสอบการอนุญาตของเบราว์เซอร์");
+    //             },
+    //             {
+    //                 enableHighAccuracy: true,
+    //                 timeout: 10000,
+    //                 maximumAge: 0,
+    //             }
+    //         );
+    //     } else {
+    //         alert("เบราว์เซอร์ของคุณไม่รองรับการเข้าถึงตำแหน่ง");
+    //     }
+    // };
+
+    // // ฟังก์ชันจัดการข้อมูลช่วงเวลาที่มีผู้ใช้เยอะ
+    // function mostUserWhenFunc(mostUserWhenList){
+    //     let content = mostUserWhenList[0];
+
+    //     if (mostUserWhenList.length > 1){
+    //         for(let i=1;i<mostUserWhenList.length;i++){
+    //             content += `, ${mostUserWhenList[i]}`;
+    //         }
+    //     }
+    //     return content;
+    // }
+
+    // ฟังก์ชันจัดรูปแบบราคา
+    // function priceFormat(priceObj) {
+    //     let i = 0;
+    //     let priceList = Object.entries(priceObj);
+        
+    //     let content = "<div className=' p-3'>";
+    //     for (; i < Math.ceil(priceList.length / 2); i++) {
+    //         let place = priceList[i][0], price = priceList[i][1];
+    //         content += `<div>${place}: ${price}฿</div>`;
+    //     }
+    //     content += "</div><div className=' p-3'>";
+    //     for (; i < priceList.length; i++) {
+    //         let place = priceList[i][0], price = priceList[i][1];
+    //         content += `<div>${place}: ${price}฿</div>`;
+    //     }
+    //     content += "</div>";
+    //     return content;
+    // }
+
+    // กำหนดขอบเขตของแผนที่
+    // const upperBound = latLng(13.9071, 100.5065);
+    // const lowerBound = latLng(13.7356, 100.5194);
+    // const rightBound = latLng(13.8231, 100.6294);
+    // const leftBound = latLng(13.8216, 100.4130);
+    // const bounds = latLngBounds([upperBound, leftBound, lowerBound, rightBound]);
+
+    // กำหนดตำแหน่งเริ่มต้นและระดับซูม
+    const initialCenter = [13.8304, 100.5147];
+    const initialZoom = 16;
+
+    return (
+        <div>
+             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossOrigin=""/>
+             <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossOrigin=""></script>
+            
+
+            {error && <div className="error-message">{error}</div>}
+            
+            {/* Information */}
+
+            {isDesktopOrLaptop && (
+                <>  
+                    {!info_show ?   // turn off information
+                    <>
+                        <SlArrowRightCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
+                        size-10  rounded-full top-1/2 left-0 -mt-5 ml-2
+                        hover:-mt-6 hover:cursor-pointer hover:size-12'
+                        onClick={()=>setInfo_show(!info_show)}
+                        />
+                    </>
+                    :       // turn on information
+                    <>   
+                        <SlArrowLeftCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
+                        size-10 rounded-full top-1/2 left-1/4 -mt-5 ml-2
+                        hover:-mt-6 hover:cursor-pointer hover:size-12' 
+                        onClick={()=>setInfo_show(!info_show)}
+                        />
+                        <div className='absolute z-20 bg-white w-1/4 h-screen overflow-auto
+                        border-2 border-black'>
+                            <div className='w-full h-full'>
+                                <Info win_data={info_param} />
+                            </div>
+                        </div>
+                    </>
+                    }
+                </>
+            )}
+
+            {isTabletOrMobile && (
+                <>
+                    {!info_show ?
+                        <>
+                            <SlArrowUpCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out 
+                            size-10 rounded-full bottom-0 mb-2 -ml-5 left-1/2
+                            hover:cursor-pointer hover:size-12 hover:-ml-6' 
+                            onClick={()=>setInfo_show(!info_show)} />
+                        </>
+                    :
+                        <>
+                        
+                            <SlArrowDownCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out    
+                            size-10 rounded-full bottom-1/2 -ml-5 mb-2 left-1/2
+                            hover:cursor-pointer hover:size-12 hover:-ml-6'
+                            onClick={()=>setInfo_show(!info_show)}/>
+                            
+                            <div className='absolute z-20 bg-white w-full h-2/4 bottom-0 overflow-auto
+                            border-2 border-black'>
+                                <div className='w-full h-full'>
+                                    <Info win_data={info_param} />
+                                </div>
+                            </div>
+                        </>
+                    }
+                </>
+            )}
+
+            {/* Leaflet map section*/}
+            <MapContainer
+                center={initialCenter}
+                zoom={initialZoom}
+                scrollWheelZoom={true}
+                className="h-screen z-10"
+            >
+                <TileLayer 
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                
+                {/* Marking the motorcycle stands wit mapping function */}
+                {win_location.map((obj) => (
+                    <Marker 
+                    key={obj.id} 
+                    position={Array(obj.lat, obj.lng)}
+                    eventHandlers={{
+                        click: () => {
+                            setInfo_param(Array(
+                                win_name[obj.id-1], win_price[obj.id-1],
+                                win_location[obj.id-1], win_time[obj.id-1],
+                                win_rider[obj.id-1], win_most_user_time[obj.id-1],
+                                win_credit[obj.id-1]
+                            )),
+                            setInfo_show(true)
+                        }
+                    }}>
+                        <Tooltip key={obj.id}>{Object(win_name[obj.id-1]).name}</Tooltip>
+                    </Marker>
+                ))}
+
+            </MapContainer>
+
+            {/*{/* Map plane 
+            <MapContainer 
+                center={mapCenter || initialCenter} 
+                zoom={initialZoom} 
+                scrollWheelZoom={true}
+                // maxBounds={bounds}
+                className="h-screen z-10">
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                {filteredData.map((obj) => (
+                    <Marker key={obj.id} position={obj.latlng}>
+                        {/* <Popup className="pointer-events-none">
+                            <header className="text-center text-2xl font-bold">
+                                {obj.name}
+                            </header>
+                            <main className="text-base">
+                                เวลาบริการ: {(obj.time != null) ? obj.time[0] + " - " + obj.time[1] : '-'}<br />
+                                จำนวนวินต่อวัน: {(obj.amount != null) ? obj.amount : '-'}<br />
+                                ช่วงที่มีผู้ใช้บริการเยอะ: {(obj.mostUserWhen == null) ? '-': mostUserWhenFunc(obj.mostUserWhen)}
+                                <div>   
+                                    ราคา: {(obj.price == null) ? "-" : 
+                                        <div className="flex text-xs " dangerouslySetInnerHTML={{__html: priceFormat(obj.price)}} />
+                                    }
+                                </div>
+                            </main>
+                            <footer className="text-base">
+                                ข้อมูลจาก: {(obj.credit != null) ? obj.credit : "-"}
+                            </footer>
+                        </Popup> *
+                        <Tooltip>{obj.name}</Tooltip>
+                    </Marker>
+                ))}
+
+                {currentPosition && (
+                    <CircleMarker
+                        center={currentPosition}
+                        radius={5}
+                        color="red"
+                        fillColor="red"
+                        fillOpacity={0.5}
+                    >
+                        <Popup>ตำแหน่งปัจจุบันของคุณ</Popup>
+                    </CircleMarker>
+                )}
+
+                {/* เลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้ 
+                {currentPosition && <MoveMapToCurrentPosition position={currentPosition} />}
+                {/* เลื่อนแผนที่ไปยังตำแหน่งแรกของผลลัพธ์การค้นหา *
+                {filteredData.length > 0 && <MoveMapToPosition position={filteredData[0].latlng} />}
+            </MapContainer> */}
+            
+            {/* navbar */}
+            {/* <button
+                aria-label="แสดงตำแหน่งของคุณ"
+                aria-pressed="false"
+                id="sVuEFc"
+                className="map-button"
+                onClick={handleButtonClick}
+            >
+                <svg className="svg-icon-show-me" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" 
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        stroke="currentColor" 
+                        d="M10.292,4.229c-1.487,0-2.691,1.205-2.691,2.691s1.205,2.691,2.691,2.691s2.69-1.205,2.69-2.691
+                        S11.779,4.229,10.292,4.229z M10.292,8.535c-0.892,0-1.615-0.723-1.615-1.615S9.4,5.306,10.292,5.306
+                        c0.891,0,1.614,0.722,1.614,1.614S11.184,8.535,10.292,8.535z M10.292,1C6.725,1,3.834,3.892,3.834,7.458
+                        c0,3.567,6.458,10.764,6.458,10.764s6.458-7.196,6.458-10.764C16.75,3.892,13.859,1,10.292,1z M4.91,7.525
+                        c0-3.009,2.41-5.449,5.382-5.449c2.971,0,5.381,2.44,5.381,5.449s-5.381,9.082-5.381,9.082S4.91,10.535,4.91,7.525z"></path>
+                </svg>
+            </button> */}
+            
+        </div>
+    );
+}
+
+export default Map;
