@@ -1,47 +1,58 @@
-// Updated page.js
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useMediaQuery } from 'react-responsive';
 
+import Navbar from '../components/Navbar';
+
 const Map = dynamic(() => import('../components/Map'), {
     ssr: false,
-    loading: () => <div>Loading...</div>
+    loading: () => <div className=' text-center w-screen '>loading...</div>,
 });
 
 function Home() {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [mapCenter, setMapCenter] = useState(null);
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [mapCenter, setMapCenter] = useState(null);
 
-    const isDesktopOrLaptop = useMediaQuery({minWidth: 1224})       // react-responsive
-    const isTabletOrMobile = useMediaQuery({maxWidth: 1224})
+    const [lang, setLang] = useState("thai"); 
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
+    const isDesktopOrLaptop = useMediaQuery({minWidth: 1224});       // react-responsive
+    const isTabletOrMobile = useMediaQuery({maxWidth: 1224});
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            if (searchTerm.trim() !== '') {
-                setMapCenter(null); // Reset map center before search
-            }
-        }
-    };
+    function handleLangChange(lang) {
+        setLang(lang);
+    }
 
-    const handleRadioChange = (event) => {
-        const selectedValue = event.target.value;
-        if (selectedValue === 'focusSearch') {
-            document.querySelector('.search-input').focus();
-        } else {
-            window.location.href = selectedValue;
-        }
-    };
+    useEffect(() => {
+        handleLangChange("thai");
+    }, [handleLangChange]); 
+    // const handleSearchChange = (event) => {
+    //     setSearchTerm(event.target.value);
+    // };
+
+    // const handleKeyDown = (event) => {
+    //     if (event.key === 'Enter') {
+    //         event.preventDefault();
+    //         if (searchTerm.trim() !== '') {
+    //             setMapCenter(null); // Reset map center before search
+    //         }
+    //     }
+    // };
+
+    // const handleRadioChange = (event) => {
+    //     const selectedValue = event.target.value;
+    //     if (selectedValue === 'focusSearch') {
+    //         document.querySelector('.search-input').focus();
+    //     } else {
+    //         window.location.href = selectedValue;
+    //     }
+    // };
 
     return (
-        <div className="homepage">
-            <header className="headerhome">
+        <div  className="relative">
+            {/* search fillbox */}
+            {/* <header className="headerhome">
                 <div className="container-input">
                 <input 
                   type="text" 
@@ -55,11 +66,53 @@ function Home() {
                   <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fillRule="evenodd"></path>
                 </svg>
                 </div>
-            </header>
-            <main className="map">
-                <Map searchTerm={searchTerm} mapCenter={mapCenter} onMapCenterUpdate={setMapCenter} />
-            </main>
-            <footer className="footerhome">
+            </header> */}
+
+            {/* navbar */}
+            {/* {isDesktopOrLaptop && (
+                <div>
+                    <div>
+                        fsdfdsdsadsaddsafdasd
+                    </div>
+                </div>
+            )} */}
+
+            {/* <div className='absolute w-1/2 h-full border border-red-400 z-20'></div> */}
+
+            {/* {isTabletOrMobile && isClient && (
+                <>
+                    <div className={'absolute z-30 p-1' + (showMenu ? " bg-white " : "")}
+                    onClick={() => {setShowMenu(!showMenu)}}>
+                        <FiAlignJustify size={"2em"}/>
+                        {showMenu && (
+                            <div className="w-screen">
+                                <Link href="/home" className="flex p-2 -ml-1 shadow-sm">
+                                    <FaHome size={"2em"}/>
+                                    <h1 className='p-1'>Home</h1>
+                                </Link>
+                                <Link href="/management" className="flex p-2 -ml-1 shadow-sm">
+                                    <FaWpforms size={"2em"}/>
+                                    <h1 className='p-1'>Complaint</h1>
+                                </Link>
+                                <Link href="/about" className="flex pt-2 pl-2 -ml-1 -mb-1 shadow-sm">
+                                    <BsFillPeopleFill size={"2em"}/>
+                                    <h1 className='p-1'>About us</h1>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </>
+                
+            )} */}
+            <Navbar handleLangChangeChild={handleLangChange}/>
+            
+
+            {/* Map layout */}
+            <Map />
+            
+            
+            
+            {/* <footer className="footerhome">
                 <div id="navbody">
                     <form>
                         <ul className="ul">
@@ -69,7 +122,7 @@ function Home() {
                                     name="rad"
                                     id="choose1"
                                     type="radio"
-                                    value="/home"
+                                    // value="/home"
                                     defaultChecked
                                     onChange={handleRadioChange}
                                 />
@@ -181,7 +234,9 @@ function Home() {
                         </ul>
                     </form>
                 </div>
-            </footer>
+            </footer> */}
+
+
         </div>
     );
 }

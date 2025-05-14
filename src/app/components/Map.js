@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+"use client";
+
+import React, { useState, useEffect, useCallback, memo} from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, CircleMarker, useMap } from 'react-leaflet';
 import { latLng, latLngBounds } from 'leaflet';
 import { createClient } from '../utils/supabase/client';
@@ -47,7 +49,6 @@ L.Icon.Default.mergeOptions({
 // let { data: win_name, error } = await supabase
 //   .from('win_name')
 //   .select('*');
-  
 
 function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps}) {
     
@@ -63,6 +64,8 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
 
     const [info_show, setInfo_show] = useState(false);              // information variables
     const [info_param, setInfo_param] = useState([]);
+    const [info_id, setInfo_id] = useState();
+
     const isDesktopOrLaptop = useMediaQuery({minWidth: 1224})       // react-responsive
     const isTabletOrMobile = useMediaQuery({maxWidth: 1224})
 
@@ -334,20 +337,20 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
                 <>  
                     {!info_show ?   // turn off information
                     <>
-                        <SlArrowRightCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
-                        size-10  rounded-full top-1/2 left-0 -mt-5 ml-2
+                        <SlArrowLeftCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
+                        size-10  rounded-full top-1/2 right-0 -mt-5 mr-2
                         hover:-mt-6 hover:cursor-pointer hover:size-12'
                         onClick={()=>setInfo_show(!info_show)}
                         />
                     </>
                     :       // turn on information
                     <>   
-                        <SlArrowLeftCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
-                        size-10 rounded-full top-1/2 left-1/4 -mt-5 ml-2
+                        <SlArrowRightCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
+                        size-10 rounded-full top-1/2 right-1/4 -mt-5 mr-2
                         hover:-mt-6 hover:cursor-pointer hover:size-12' 
                         onClick={()=>setInfo_show(!info_show)}
                         />
-                        <div className='absolute z-20 bg-white w-1/4 h-screen overflow-auto
+                        <div className='absolute right-0 z-20 bg-white w-1/4 h-screen overflow-auto
                         border-2 border-black'>
                             <div className='w-full h-full'>
                                 <Info win_data={info_param} />
@@ -363,19 +366,19 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
                     {!info_show ?
                         <>
                             <SlArrowUpCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out 
-                            size-10 rounded-full bottom-0 mb-2 -ml-5 left-1/2
-                            hover:cursor-pointer hover:size-12 hover:-ml-6' 
+                            size-10 rounded-full bottom-0 mb-2 -ml-[21px] left-1/2
+                            hover:cursor-pointer hover:size-12 hover:-ml-[24.5px]' 
                             onClick={()=>setInfo_show(!info_show)} />
                         </>
                     :
                         <>
                         
                             <SlArrowDownCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out    
-                            size-10 rounded-full bottom-1/2 -ml-5 mb-2 left-1/2
-                            hover:cursor-pointer hover:size-12 hover:-ml-6'
+                            size-10 rounded-full bottom-2/3 -ml-[21px] mb-2 left-1/2
+                            hover:cursor-pointer hover:size-12 hover:-ml-[24.5px]'
                             onClick={()=>setInfo_show(!info_show)}/>
                             
-                            <div className='absolute z-20 bg-white w-full h-2/4 bottom-0 overflow-auto
+                            <div className='absolute z-20 bg-white w-full h-2/3 bottom-0 overflow-auto
                             border-2 border-black'>
                                 <div className='w-full h-full'>
                                     <Info win_data={info_param} />
@@ -391,11 +394,13 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
                 center={initialCenter}
                 zoom={initialZoom}
                 scrollWheelZoom={true}
+                zoomControl={false}
                 className="h-screen z-10"
-            >
+                >
                 <TileLayer 
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    key={"tile-layer"}
                 />
                 
                 {/* Marking the motorcycle stands wit mapping function */}
@@ -405,13 +410,18 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
                     position={Array(obj.lat, obj.lng)}
                     eventHandlers={{
                         click: () => {
-                            setInfo_param(Array(
-                                win_name[obj.id-1], win_price[obj.id-1],
-                                win_location[obj.id-1], win_time[obj.id-1],
-                                win_rider[obj.id-1], win_most_user_time[obj.id-1],
-                                win_credit[obj.id-1]
-                            )),
-                            setInfo_show(true)
+                            if (obj.id == info_id){
+                                setInfo_show(!info_show);
+                                setInfo_id(obj.id);
+                            }else{
+                                setInfo_param(Array(
+                                    win_name[obj.id-1], win_price[obj.id-1],
+                                    win_location[obj.id-1], win_time[obj.id-1],
+                                    win_rider[obj.id-1], win_most_user_time[obj.id-1],
+                                    win_credit[obj.id-1]
+                                ));
+                                setInfo_id(obj.id);
+                            }
                         }
                     }}>
                         <Tooltip key={obj.id}>{Object(win_name[obj.id-1]).name}</Tooltip>
@@ -500,4 +510,4 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
     );
 }
 
-export default Map;
+export default memo(Map);
