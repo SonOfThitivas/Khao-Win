@@ -1,6 +1,7 @@
 "use client";
 
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, useCallback, use } from 'react';
+import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useMediaQuery } from 'react-responsive';
 
@@ -11,22 +12,17 @@ const Map = dynamic(() => import('../components/Map'), {
     loading: () => <div className=' text-center w-screen '>loading...</div>,
 });
 
+
 function Home() {
     // const [searchTerm, setSearchTerm] = useState('');
     // const [mapCenter, setMapCenter] = useState(null);
 
-    const [lang, setLang] = useState("thai"); 
+    const [lang, setLang] = useState(""); 
 
     const isDesktopOrLaptop = useMediaQuery({minWidth: 1224});       // react-responsive
     const isTabletOrMobile = useMediaQuery({maxWidth: 1224});
 
-    function handleLangChange(lang) {
-        setLang(lang);
-    }
 
-    useEffect(() => {
-        handleLangChange("thai");
-    }, [handleLangChange]); 
     // const handleSearchChange = (event) => {
     //     setSearchTerm(event.target.value);
     // };
@@ -51,6 +47,10 @@ function Home() {
 
     return (
         <div  className="relative">
+            <Navbar />
+            {/* Map layout */}
+            <Map />
+            
             {/* search fillbox */}
             {/* <header className="headerhome">
                 <div className="container-input">
@@ -104,13 +104,6 @@ function Home() {
                 </>
                 
             )} */}
-            <Navbar handleLangChangeChild={handleLangChange}/>
-            
-
-            {/* Map layout */}
-            <Map />
-            
-            
             
             {/* <footer className="footerhome">
                 <div id="navbody">

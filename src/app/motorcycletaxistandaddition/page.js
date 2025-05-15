@@ -1,17 +1,28 @@
 "use client";
-import React, { useState } from 'react';
-
+import React, { useCallback, useState, useEffect, use } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '../components/Navbar';
 
 
 function motorcycletaxistandaddition() {
-    const [lang, setLang] = useState("thai");  // show search bar
+
+    const [lang, setLang] = useState("th");  // show search bar
+
+    const searchParams = useSearchParams();
+    const langParam = searchParams.get("lang");
+
+    useEffect(()=>{
+        if (langParam){
+            setLang(langParam);
+        }
+    },[langParam]);
+    
 
   return (
     <div>
-        <Navbar handleLangChangeChild={handleLangChange}/>
+        <Navbar />
         <div className="flex items-center justify-center h-screen">
-            {lang == "eng" ? "This page is in development." : "หน้านี้อยู่ในระหว่างการพัฒนา"}
+            {lang === "en" ? "This page is in development." : "หน้านี้อยู่ในระหว่างการพัฒนา"}
         </div>
     </div>
   );

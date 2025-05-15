@@ -6,7 +6,7 @@ import Image from 'next/image';
 function Page() {
   return (
     <div className="logoin">
-    <a href="/home">
+    <a href="/home?lang=th">
       <div className='headerpage'>
         <Image src="/LOGO1.png" alt="logo" width={400} height={400} className="center"/>
       </div>
