@@ -3,14 +3,11 @@ import React, { useCallback, useState, useEffect, use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '../components/Navbar';
 
-
 function motorcycletaxistandaddition() {
 
-    const [lang, setLang] = useState("th");  // show search bar
-
+    const [lang, setLang] = useState("th");         // language display
     const searchParams = useSearchParams();
     const langParam = searchParams.get("lang");
-
     useEffect(()=>{
         if (langParam){
             setLang(langParam);
