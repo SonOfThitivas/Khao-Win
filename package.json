@@ -27,7 +27,8 @@
     "react-leaflet": "^5.0.0",
     "react-responsive": "^10.0.1",
     "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@types/react": "19.0.10",

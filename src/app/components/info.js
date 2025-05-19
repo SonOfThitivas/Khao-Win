@@ -20,7 +20,7 @@ export default function Info({win_data = {}}){
     const [priceText, setPriceText] = useState("");
 
 
-
+    // price data handling
     useEffect(() => {
         if (win_data.length == 0){
             setShowInfo(false)

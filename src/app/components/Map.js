@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, memo} from 'react';
+import React, { useState, useEffect, useCallback, memo, useRef} from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, CircleMarker, useMap } from 'react-leaflet';
 import { latLng, latLngBounds } from 'leaflet';
 import { createClient } from '../utils/supabase/client';
 import "leaflet/dist/leaflet.css";
 import { SlArrowUpCircle, SlArrowDownCircle, SlArrowRightCircle, SlArrowLeftCircle } from "react-icons/sl";
+import { TbCaretUpDownFilled } from "react-icons/tb";
 import { useMediaQuery } from 'react-responsive';
 // import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 // import "leaflet-defaulticon-compatibility";
@@ -15,6 +16,7 @@ import Info from "./info.js";
 
 // Icon Error: https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-261904061 02/22/2025 Karn
 import L from 'leaflet';
+import { SERVER_PROPS_GET_INIT_PROPS_CONFLICT } from 'next/dist/lib/constants';
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -50,6 +52,56 @@ L.Icon.Default.mergeOptions({
 //   .from('win_name')
 //   .select('*');
 
+export function InfoCard({info_param}){
+    const [preClientY, setPreClientY] = useState(null);
+    const [sizePer, setSizePer] = useState(8);
+    const [infoSize, setInfoSize] = useState(`h-[${sizePer}%]`);
+    const intervalRef = useRef(null);
+    const [infoCliked, setInfoCliked] = useState(false);
+
+    function startInfoDrag(event){
+        setInfoCliked(true);
+        setPreClientY(event.clientY);
+    };
+
+    function draggingInfo(event){
+        if (!infoCliked) return;
+        console.log(event.clientX, event.clientY);
+        if (event.clientY > preClientY){
+            if (sizePer < 90){
+                setSizePer(sizePer+1);
+            }
+        }else if (event.clientY < preClientY){
+            if (sizePer > 8){
+                setSizePer(sizePer-1);
+            }
+        }
+        setInfoSize(`h-[${sizePer}%]`);
+        setPreClientY(event.clientY);
+    }
+
+    function stopInfoDrag(){
+        setInfoCliked(false);
+    };
+
+    useEffect(()=>stopInfoDrag(),[]);
+    
+    return(
+        <>
+            <div className={`absolute z-20 bg-white w-full h-full bottom-0 border-2 border-black rounded-t-2xl overflow-hidden`}>
+                <div className='flex justify-center border-b shadow-md'
+                onMouseDown={startInfoDrag} onMouseMove={draggingInfo} 
+                onMouseUp={stopInfoDrag} onMouseLeave={stopInfoDrag}>
+                    <TbCaretUpDownFilled size={"3rem"}/>
+                </div>
+                <div className='w-full h-full overflow-auto'>
+                    <Info win_data={info_param} />
+                </div>
+            </div>
+        </>
+    );
+}
+
 function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps}) {
     
     const supabase = createClient();
@@ -65,6 +117,7 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
     const [info_show, setInfo_show] = useState(false);              // information variables
     const [info_param, setInfo_param] = useState([]);
     const [info_id, setInfo_id] = useState();
+    
 
     const isDesktopOrLaptop = useMediaQuery({minWidth: 1224})       // react-responsive
     const isTabletOrMobile = useMediaQuery({maxWidth: 1224})
@@ -235,7 +288,8 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
         fetch_win_credit
     ]);
 
-    // console.log(win_price);
+    
+    // console.log(win_price);  
 
     // // ฟังก์ชันกรองข้อมูลตามคำค้นหา
     // const filterData = () => {
@@ -331,64 +385,6 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
 
             {error && <div className="error-message">{error}</div>}
             
-            {/* Information */}
-
-            {isDesktopOrLaptop && (
-                <>  
-                    {!info_show ?   // turn off information
-                    <>
-                        <SlArrowLeftCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
-                        size-10  rounded-full top-1/2 right-0 -mt-5 mr-2
-                        hover:-mt-6 hover:cursor-pointer hover:size-12'
-                        onClick={()=>setInfo_show(!info_show)}
-                        />
-                    </>
-                    :       // turn on information
-                    <>   
-                        <SlArrowRightCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out
-                        size-10 rounded-full top-1/2 right-1/4 -mt-5 mr-2
-                        hover:-mt-6 hover:cursor-pointer hover:size-12' 
-                        onClick={()=>setInfo_show(!info_show)}
-                        />
-                        <div className='absolute right-0 z-20 bg-white w-1/4 h-screen overflow-auto
-                        border-2 border-black'>
-                            <div className='w-full h-full'>
-                                <Info win_data={info_param} />
-                            </div>
-                        </div>
-                    </>
-                    }
-                </>
-            )}
-
-            {isTabletOrMobile && (
-                <>
-                    {!info_show ?
-                        <>
-                            <SlArrowUpCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out 
-                            size-10 rounded-full bottom-0 mb-2 -ml-[21px] left-1/2
-                            hover:cursor-pointer hover:size-12 hover:-ml-[24.5px]' 
-                            onClick={()=>setInfo_show(!info_show)} />
-                        </>
-                    :
-                        <>
-                        
-                            <SlArrowDownCircle className='absolute z-30 bg-blue-400 duration-150 ease-in-out    
-                            size-10 rounded-full bottom-2/3 -ml-[21px] mb-2 left-1/2
-                            hover:cursor-pointer hover:size-12 hover:-ml-[24.5px]'
-                            onClick={()=>setInfo_show(!info_show)}/>
-                            
-                            <div className='absolute z-20 bg-white w-full h-2/3 bottom-0 overflow-auto
-                            border-2 border-black'>
-                                <div className='w-full h-full'>
-                                    <Info win_data={info_param} />
-                                </div>
-                            </div>
-                        </>
-                    }
-                </>
-            )}
-
             {/* Leaflet map section*/}
             <MapContainer
                 center={initialCenter}
@@ -430,81 +426,8 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
 
             </MapContainer>
 
-            {/*{/* Map plane 
-            <MapContainer 
-                center={mapCenter || initialCenter} 
-                zoom={initialZoom} 
-                scrollWheelZoom={true}
-                // maxBounds={bounds}
-                className="h-screen z-10">
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-
-                {filteredData.map((obj) => (
-                    <Marker key={obj.id} position={obj.latlng}>
-                        {/* <Popup className="pointer-events-none">
-                            <header className="text-center text-2xl font-bold">
-                                {obj.name}
-                            </header>
-                            <main className="text-base">
-                                เวลาบริการ: {(obj.time != null) ? obj.time[0] + " - " + obj.time[1] : '-'}<br />
-                                จำนวนวินต่อวัน: {(obj.amount != null) ? obj.amount : '-'}<br />
-                                ช่วงที่มีผู้ใช้บริการเยอะ: {(obj.mostUserWhen == null) ? '-': mostUserWhenFunc(obj.mostUserWhen)}
-                                <div>   
-                                    ราคา: {(obj.price == null) ? "-" : 
-                                        <div className="flex text-xs " dangerouslySetInnerHTML={{__html: priceFormat(obj.price)}} />
-                                    }
-                                </div>
-                            </main>
-                            <footer className="text-base">
-                                ข้อมูลจาก: {(obj.credit != null) ? obj.credit : "-"}
-                            </footer>
-                        </Popup> *
-                        <Tooltip>{obj.name}</Tooltip>
-                    </Marker>
-                ))}
-
-                {currentPosition && (
-                    <CircleMarker
-                        center={currentPosition}
-                        radius={5}
-                        color="red"
-                        fillColor="red"
-                        fillOpacity={0.5}
-                    >
-                        <Popup>ตำแหน่งปัจจุบันของคุณ</Popup>
-                    </CircleMarker>
-                )}
-
-                {/* เลื่อนแผนที่ไปยังตำแหน่งปัจจุบันของผู้ใช้ 
-                {currentPosition && <MoveMapToCurrentPosition position={currentPosition} />}
-                {/* เลื่อนแผนที่ไปยังตำแหน่งแรกของผลลัพธ์การค้นหา *
-                {filteredData.length > 0 && <MoveMapToPosition position={filteredData[0].latlng} />}
-            </MapContainer> */}
-            
-            {/* navbar */}
-            {/* <button
-                aria-label="แสดงตำแหน่งของคุณ"
-                aria-pressed="false"
-                id="sVuEFc"
-                className="map-button"
-                onClick={handleButtonClick}
-            >
-                <svg className="svg-icon-show-me" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" 
-                        strokeWidth="1.5"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                        stroke="currentColor" 
-                        d="M10.292,4.229c-1.487,0-2.691,1.205-2.691,2.691s1.205,2.691,2.691,2.691s2.69-1.205,2.69-2.691
-                        S11.779,4.229,10.292,4.229z M10.292,8.535c-0.892,0-1.615-0.723-1.615-1.615S9.4,5.306,10.292,5.306
-                        c0.891,0,1.614,0.722,1.614,1.614S11.184,8.535,10.292,8.535z M10.292,1C6.725,1,3.834,3.892,3.834,7.458
-                        c0,3.567,6.458,10.764,6.458,10.764s6.458-7.196,6.458-10.764C16.75,3.892,13.859,1,10.292,1z M4.91,7.525
-                        c0-3.009,2.41-5.449,5.382-5.449c2.971,0,5.381,2.44,5.381,5.449s-5.381,9.082-5.381,9.082S4.91,10.535,4.91,7.525z"></path>
-                </svg>
-            </button> */}
+            {/* Information Displayer */}
+            <InfoCard info_param={info_param}/>
             
         </div>
     );
