@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSearchParams } from "react";
 import "./info-style.css";
 
-export default function Info({win_data = {}}){
+export default function Info({win_data = {}, lang="th"}){
 
     /*                 win_data
     ==================================================
@@ -28,7 +28,7 @@ export default function Info({win_data = {}}){
             setShowInfo(true)
             let text = "";
             win_data[1].dest.map((x) => {
-                text += `<div class="destName">${x.name}:</div>
+                text += `<div class="destName">${x.name}</div>
                 <div class="destPrice">${x.price.toString()} ฿</div>`;
             })
             setPriceText(text);
@@ -41,27 +41,26 @@ export default function Info({win_data = {}}){
             {!showInfo ? 
                 <div className=" h-full w-full
                 flex justify-center items-center">
-                    <h1 className=" text-l font-bold">
-                        กดที่หมุดพิกัดใดก็ได้เพื่อดูข้อมูลเพิ่มเติม<br/>
-                        Click on any markers to see more information.
+                    <h1 className=" text-l font-bold text-center p-2">
+                        {lang === "th" ? "กดที่หมุดพิกัดใดก็ได้เพื่อดูข้อมูลเพิ่มเติม":
+                        "Click on any markers to see more information."}
                     </h1>
                 </div>
             : 
-            <div className=" h-full w-full">
-                <div className=" mt-5 text-5xl font-bold">{win_data[0].name}</div>
-                <hr className=" mt-1 mb-1 border-b-4 border-black rounded-md" />
+            <div className="flex flex-col items-center h-full border-2 border-green-400">
+                <div className=" mt-5 text-5xl font-bold text-center border-b-2 border-black">{win_data[0].name}</div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="font-semibold text-end">เวลาบริการ:</div>
                     <div className="text-start">{win_data[3].time[0]} - {win_data[3].time[1]}</div>
                     <div className="font-semibold text-end">ช่วงที่มีผู้ใช้บริการเยอะ:</div>
                     <div className="text-start">{win_data[5].time.toString()}</div>
                     <div className="font-semibold text-end">จำนวนวินต่อวัน:</div>
-                    <div className="text-start">{win_data[4].amount} คน</div>
+                    <div className="">{win_data[4].amount} คน</div>
                 </div>
-                <div className="text-lg font-semibold">ราคา</div>
-                <div className="priceTable grid grid-cols-2" 
+                <div className="text-lg font-semibold text-center">ราคา</div>
+                <div className="priceTable grid grid-cols-2 justify-center" 
                 dangerouslySetInnerHTML={{__html: priceText}} />
-                <div className=" text-start m-1">ข้อมูลจาก: {win_data[6].name}</div>
+                <div className="m-1 pb-5">ข้อมูลจาก: {win_data[6].name}</div>
             </div>}
         </>
     );

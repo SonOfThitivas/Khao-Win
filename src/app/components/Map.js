@@ -53,52 +53,22 @@ L.Icon.Default.mergeOptions({
 //   .select('*');
 
 export function InfoCard({info_param}){
-    const [preClientY, setPreClientY] = useState(null);
-    const [sizePer, setSizePer] = useState(8);
-    const [infoSize, setInfoSize] = useState(`h-[${sizePer}%]`);
-    const intervalRef = useRef(null);
-    const [infoCliked, setInfoCliked] = useState(false);
-
-    function startInfoDrag(event){
-        setInfoCliked(true);
-        setPreClientY(event.clientY);
-    };
-
-    function draggingInfo(event){
-        if (!infoCliked) return;
-        console.log(event.clientX, event.clientY);
-        if (event.clientY > preClientY){
-            if (sizePer < 90){
-                setSizePer(sizePer+1);
-            }
-        }else if (event.clientY < preClientY){
-            if (sizePer > 8){
-                setSizePer(sizePer-1);
-            }
-        }
-        setInfoSize(`h-[${sizePer}%]`);
-        setPreClientY(event.clientY);
+    const [heightPer, setHeightPer] = useState(8);
+    const handleHeightPer = () => {
+        if (heightPer === 8) setHeightPer(90);
+        else setHeightPer(8);
     }
 
-    function stopInfoDrag(){
-        setInfoCliked(false);
-    };
-
-    useEffect(()=>stopInfoDrag(),[]);
-    
     return(
-        <>
-            <div className={`absolute z-20 bg-white w-full h-full bottom-0 border-2 border-black rounded-t-2xl overflow-hidden`}>
-                <div className='flex justify-center border-b shadow-md'
-                onMouseDown={startInfoDrag} onMouseMove={draggingInfo} 
-                onMouseUp={stopInfoDrag} onMouseLeave={stopInfoDrag}>
-                    <TbCaretUpDownFilled size={"3rem"}/>
-                </div>
-                <div className='w-full h-full overflow-auto'>
-                    <Info win_data={info_param} />
-                </div>
+        <div className={`absolute z-20 w-full sm:w-[640px] bg-white bottom-0 border-2 border-black rounded-t-2xl overflow-hidden duration-200 ease-in-out `}
+        style={{height: `${heightPer}%`}}>
+            <div className='flex justify-center border-b shadow-md' onClick={handleHeightPer}>
+                <TbCaretUpDownFilled size={"3rem"}/>
             </div>
-        </>
+            <div className='w-full h-full overflow-auto'>
+                <Info win_data={info_param} />
+            </div>
+        </div>
     );
 }
 
@@ -427,10 +397,11 @@ function Map({ searchTerm, mapCenter, onMapCenterUpdate , Component, pageProps})
             </MapContainer>
 
             {/* Information Displayer */}
-            <InfoCard info_param={info_param}/>
-            
+            <div className='flex justify-center w-full'>
+                <InfoCard info_param={info_param}/>
+            </div>
         </div>
     );
 }
 
-export default memo(Map);
+export default Map;

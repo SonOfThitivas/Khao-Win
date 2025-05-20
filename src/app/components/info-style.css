@@ -4,11 +4,13 @@
 }
 
 .destName {
-    /* padding-right: 0.5em; */
+    padding-right: 0.5em;
     text-align: end;
+    border: solid black 1px;
 }
 
 .destPrice{
     padding-left: 0.5em;
     text-align: start;
+    border: solid black 1px;
 }

@@ -17,11 +17,15 @@ function Home() {
     // const [searchTerm, setSearchTerm] = useState('');
     // const [mapCenter, setMapCenter] = useState(null);
 
-    const [lang, setLang] = useState(""); 
-
-    const isDesktopOrLaptop = useMediaQuery({minWidth: 1224});       // react-responsive
-    const isTabletOrMobile = useMediaQuery({maxWidth: 1224});
-
+    const [lang, setLang] = useState("th"); 
+    const searchParams = useSearchParams();
+    const langParam = searchParams.get("lang");
+    useEffect(() => {
+        if (langParam) {
+            setLang(langParam);
+            // console.log("Language:", langParam);
+        }
+    }, [langParam]);
 
     // const handleSearchChange = (event) => {
     //     setSearchTerm(event.target.value);
@@ -49,7 +53,7 @@ function Home() {
         <div  className="relative">
             <Navbar />
             {/* Map layout */}
-            <Map />
+            <Map lang={lang}/>
             
             {/* search fillbox */}
             {/* <header className="headerhome">
