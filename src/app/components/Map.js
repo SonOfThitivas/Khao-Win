@@ -10,7 +10,7 @@ import "leaflet/dist/leaflet.css";
 // import "leaflet-defaulticon-compatibility";
 import "./map.css";
 
-import InfoCard, {InfoCardTH} from "./Infocard.js";
+import InfoCard, {InfoCardTH} from "./Infocard";
 
 // Icon Error: https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-261904061 02/22/2025 Karn
 import L from 'leaflet';
