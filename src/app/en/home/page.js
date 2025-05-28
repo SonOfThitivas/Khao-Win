@@ -1,13 +1,11 @@
-"use client";
-
+"use client"
 import React, {useEffect, useState, useCallback, use } from 'react';
-import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useMediaQuery } from 'react-responsive';
 
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/navbar';
 
-const Map = dynamic(() => import('../components/Map'), {
+const Map = dynamic(() => import('../../components/map'), {
     ssr: false,
     loading: () => <div className=' text-center w-screen '>loading...</div>,
 });
@@ -16,16 +14,6 @@ const Map = dynamic(() => import('../components/Map'), {
 function Home() {
     // const [searchTerm, setSearchTerm] = useState('');
     // const [mapCenter, setMapCenter] = useState(null);
-
-    const [lang, setLang] = useState("th"); 
-    const searchParams = useSearchParams();
-    const langParam = searchParams.get("lang");
-    useEffect(() => {
-        if (langParam) {
-            setLang(langParam);
-            // console.log("Language:", langParam);
-        }
-    }, [langParam]);
 
     // const handleSearchChange = (event) => {
     //     setSearchTerm(event.target.value);
@@ -53,7 +41,7 @@ function Home() {
         <div  className="relative">
             <Navbar />
             {/* Map layout */}
-            <Map lang={lang}/>
+            <Map />
             
             {/* search fillbox */}
             {/* <header className="headerhome">

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
-import { MdEmail } from "react-icons/md";
-import { BsFillTelephoneFill } from "react-icons/bs";
+import { MdEmail } from 'react-icons/md';
 
-function CardOnMobile({lang, data}){
+function CardOnMobile({data}){
     return(
         <>
             <Image className='m-3 border-4 border-black rounded-3xl' 
@@ -15,18 +14,14 @@ function CardOnMobile({lang, data}){
             priority={true}
             />
             <div className='mb-1 w-full h-full justify-center content-center'>
-                <p className='text-3xl text-center'>{lang === "en" ? data.nameEN :  data.nameTH}</p>
+                <p className='text-3xl text-center'>{data.nameEN}</p>
                 <div className='mb-1 flex flex-col'>
                     <div className='w-full flex justify-center'>
-                        <p className='px-1'>{lang === "en" ? "position" : "ตำแหน่ง"}:</p>
-                        <p className='px-1'>{lang === "en" ? data.positionEN : data.positionTH}</p>
-                    </div>
-                    <div className='w-full flex justify-center'>
-                        <p className='px-1 justify-end flex'><BsFillTelephoneFill size={20}/>{lang === "en" ? "Tel" : "เบอร์โทร"}:</p>
-                        <p className='px-1'>{data.tel}</p>
+                        <p className='px-1'>position:</p>
+                        <p className='px-1'>{data.positionEN}</p>
                     </div>
                     <div className='w-full flex justify-center flex-wrap'>
-                        <p className='px-1 justify-end flex'><MdEmail size={20}/>{lang === "en" ? "Email" : "อีเมล"}:</p>
+                        <p className='px-1 justify-end flex'><MdEmail size={20}/>Email:</p>
                         <p className='px-1'>{data.email}</p>
                     </div>
                 </div>
@@ -35,7 +30,7 @@ function CardOnMobile({lang, data}){
     );
 }
 
-function CardOnDesktop({lang, data}){
+function CardOnDesktop({data}){
     return(
         <>
             <div>
@@ -47,19 +42,15 @@ function CardOnDesktop({lang, data}){
                 priority={true}
                 />
             </div>
-            <div className='mb-1 w-full h-full justify-center content-center'>
-                <p className='text-3xl text-center'>{lang === "en" ? data.nameEN :  data.nameTH}</p>
+            <div className='mb-1 w-1/2 h-full justify-center content-center'>
+                <p className='text-3xl text-center'>{data.nameEN}</p>
                 <div className='mb-1 flex flex-col'>
                     <div className='w-full py-1 flex justify-center'>
-                        <p className='px-1'>{lang === "en" ? "position" : "ตำแหน่ง"}:</p>
-                        <p className='px-1'>{lang === "en" ? data.positionEN : data.positionTH}</p>
-                    </div>
-                    <div className='w-full py-1 flex justify-center'>
-                        <p className='px-1 justify-end flex'><BsFillTelephoneFill size={20}/>{lang === "en" ? "Tel" : "เบอร์โทร"}:</p>
-                        <p className='px-1'>{data.tel}</p>
+                        <p className='px-1'>position:</p>
+                        <p className='px-1'>{data.positionEN}</p>
                     </div>
                     <div className='w-full py-1 flex justify-center flex-wrap'>
-                        <p className='px-1 justify-end flex'><MdEmail size={20}/>{lang === "en" ? "Email" : "อีเมล"}:</p>
+                        <p className='px-1 justify-end flex'><MdEmail size={20}/>Email:</p>
                         <p className='px-1'>{data.email}</p>
                     </div>
                 </div>
@@ -68,7 +59,7 @@ function CardOnDesktop({lang, data}){
     );
 }
 
-export default function Card({lang, data}){
+export default function Card({data}){
     const [isClient, setIsClient] = useState(false);
     const isDesktopOrLaptop = useMediaQuery({minWidth: 769})     // react-responsive
     const isTabletOrMobile = useMediaQuery({maxWidth: 768})
@@ -82,17 +73,17 @@ export default function Card({lang, data}){
                 <>
                     <div className="flex flex-col items-center justify-center
                     border-4 border-black rounded-3xl m-5 bg-orange-200">
-                        <CardOnMobile lang={lang} data={data}/>
+                        <CardOnMobile data={data}/>
                     </div>
                 </>
             )}
 
             {isDesktopOrLaptop && isClient && (
                 <>
-                    <div className={"flex items-center justify-center" + 
+                    <div className={"flex flex-grow items-center justify-center" + 
                     " border-b-4 border-black m-5 shadow-xl" + 
                     ((data.id) % 2 === 0 ? " flex-row-reverse" : " flex-row")}>
-                        <CardOnDesktop lang={lang} data={data}/>
+                        <CardOnDesktop data={data}/>
                     </div>
                 </>
             )}
