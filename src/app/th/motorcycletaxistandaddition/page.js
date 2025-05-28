@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar, {NavbarTH} from '../../components/navbar.js';
+import Navbar, {NavbarTH} from '../../components/Navbar.js';
 
 function motorcycletaxistandaddition() {
   return (

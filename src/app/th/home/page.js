@@ -2,9 +2,9 @@
 import React, {useEffect, useState, useCallback, use } from 'react';
 import dynamic from 'next/dynamic';
 
-import {NavbarTH} from '../../components/navbar';
+import {NavbarTH} from '../../components/Navbar';
 
-const MapTH = dynamic(() => import('../../components/map').then((mod)=>mod.MapTH), {
+const MapTH = dynamic(() => import('../../components/Map').then((mod)=>mod.MapTH), {
     ssr: false,
     loading: () => <div className=' text-center w-screen '>loading...</div>,
 });

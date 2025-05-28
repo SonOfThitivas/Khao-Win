@@ -2,8 +2,8 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { createClient } from '../../utils/supabase/client';
 
-import Navbar from '../../components/navbar.js';
-import Card from '../../components/card.js';
+import Navbar from '../../components/Navbar.js';
+import Card from '../../components/Card.js';
 
 
 function About() {

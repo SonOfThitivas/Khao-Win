@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../components/navbar';
+import Navbar from '../../components/Navbar';
 
 import "./complaint.css";
 
