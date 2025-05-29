@@ -2,8 +2,8 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { createClient } from '../../utils/supabase/client';
 
-import Navbar from '../../components/Navbar.js';
-import Card from '../../components/Card.js';
+import {NavbarTH} from '../../components/Navbar.js';
+import {CardTH} from '../../components/Card.js';
 
 
 function About() {
@@ -27,14 +27,14 @@ function About() {
   return (
     <>
         <div className='sticky top-0'>
-            <Navbar />
+            <NavbarTH />
             <div className='p-5 text-center text-3xl shadow-md bg-orange-300 border-b-2 border-black'>
-                About us
+                เกี่ยวกับเรา
             </div>
         </div>
         
         <div className='w-full pb-10'>
-            {devlist.map((x)=><Card key={x.id} data={x}/>)}
+            {devlist.map((x)=><CardTH key={x.id} data={x}/>)}
         </div>
     </>
   );
