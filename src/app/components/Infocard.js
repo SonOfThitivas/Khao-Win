@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSearchParams } from "react";
+import React, { useState, useEffect} from "react";
 import "./info-style.css";
 
 export function InfoCardTH({win_data = {}, showInfo=false, setShowInfo}){
