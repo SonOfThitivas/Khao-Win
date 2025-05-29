@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback} from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, useMapEvents } from 'react-leaflet';
-import { latLng, latLngBounds } from 'leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
 import { createClient } from '../utils/supabase/client';
 import { TbCaretUpDownFilled } from "react-icons/tb";
 import "leaflet/dist/leaflet.css";

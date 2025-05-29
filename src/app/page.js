@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useAnimate, motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "motion/react"
 
 function Page() {
     const router = useRouter();
